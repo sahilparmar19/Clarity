@@ -1,0 +1,17 @@
+# Maven
+target/
+*.class
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+
+# Secrets – never commit these
+.env
+application-local.yml
+application-prod.yml
+
+# OS
+.DS_Store
+Thumbs.db
