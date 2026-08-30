@@ -1,264 +1,48 @@
-# Clarity Development Session - 2026-08-29
+# Clarity Development Session - 2026-08-29 (Evening Update)
 
-## Summary
+## Technical Progress Today
 
-Built **Clarity** — a personal productivity app (diary, tasks, expenses, calendar, projects) from scratch.
+### 1. Backend & Database
+- PostgreSQL `clarity` database connects perfectly.
+- `.env` configured with DB password (`sahil`).
+- Backend (Spring Boot) successfully compiles and runs on port `8080`.
+- All API endpoints (Auth, Tasks, Diary, Calendar) are verified to work correctly.
 
-**Stack:**
-- Backend: Spring Boot 3.5.3 + Java 25 + PostgreSQL
-- Desktop: Tauri 2 + React 19 + Vite 8 + Tailwind 4
-- Mobile: React Native (planned)
+### 2. Frontend App Generation (Vite standalone vs Tauri)
+- Resolved Vite path alias issues (`@/` to `src/`).
+- App is fully live and running in the browser right now at **http://localhost:5173**.
+- Tauri desktop `.exe` build encountered an issue with missing `icons/icon.ico`. We programmatically generated standard Tauri icons to fix this.
+- Tauri also struggled to find the MSVC C++ Linker. We created `run_tauri.bat` passing `vcvars64.bat` to forcefully expose `cl.exe` and `link.exe` to cargo. The build is running now.
 
----
-
-## What We Built
-
-### Backend (Spring Boot)
-**68 files, ~2,900 lines of code**
-
-- ✅ Full REST API with JWT authentication
-- ✅ User registration/login
-- ✅ Password-protected diary with PIN (BCrypt hashed)
-- ✅ Tasks with reminders and project grouping
-- ✅ Expense tracking with monthly summaries
-- ✅ Calendar with **year/month/day** views (year heatmap query added)
-- ✅ Projects with status tracking
-- ✅ Email reminder scheduler (runs every 60s, marks sent to avoid duplicates)
-- ✅ Global exception handler for clean HTTP error responses
-- ✅ CORS configured for Tauri + Expo origins
-
-**Models:**
-- User (with diary PIN hash)
-- Task (with optional project link, reminders)
-- DiaryEntry (one per day per user, unique constraint)
-- Expense (amount, category, date)
-- CalendarEvent (type: TASK | NOTE, with optional time blocks)
-- Project (status: TODO | IN_PROGRESS | DONE | ARCHIVED)
-
-**Bugs Fixed Before First Run:**
-1. DiaryEntry unique constraint was a nested annotation (dead code) → moved to `@Table`
-2. Null diary body would cause DB error → added blank-check in service
-3. `JwtUtil.isValid()` parsed token twice → single parse with try/catch
-4. `DiaryController.setPin` was a no-op stub → created `UserService.setDiaryPin()`
-5. Missing `UserDetailsService` bean → added to `SecurityConfig`
-6. `@Transactional` on schedulers could rollback on mail errors → added `noRollbackFor`
-7. No global exception handler → added `GlobalExceptionHandler` (400/403/404/409 responses)
+### 3. UI Implementation
+- **Diary Page:** Fully built! Beautiful notebook-style UI with date rows (14-day history). Implemented PIN-first access: it checks if you have a PIN, forces you to set one if not, and then unlocks the journal. Uses auto-save on blur.
+- **Tasks Page:** Fully built! Added a slide-in "New Task" modal handling title, description, and due dates. Checkboxes instantly sync with the DB.
+- **Calendar Page:** Fully built! Year/Month/Day heatmap views work perfectly. Added a "New Event" modal handling Task vs Note types and time blocks. 
 
 ---
 
-### Frontend (Tauri + React)
+## What's Left to Build Next Time
+- **Check Tauri desktop build outcome** (did MSVC compiler finish successfully via the bat file?).
+- **Build Expenses Page:** List/add/delete expenses, monthly summary chart.
+- **Build Projects Page:** Kanban board or list view with status columns.
 
-**Structure:**
-```
-desktop/
-├── package.json           (React 19, Tauri 2, Vite 8, Tailwind 4, latest deps)
-├── src-tauri/             (Rust backend for native desktop app)
-└── src/
-    ├── lib/
-    │   ├── types.ts       (TypeScript models matching backend)
-    │   ├── api.ts         (Full API client with all endpoints)
-    │   └── store.ts       (Zustand auth store with persistence)
-    ├── components/
-    │   └── Layout.tsx     (Sidebar navigation)
-    └── pages/
-        ├── AuthPage.tsx       (Login/Register)
-        ├── CalendarPage.tsx   (✅ Year/Month/Day views - fully built)
-        ├── TasksPage.tsx      (✅ List/toggle/delete - working)
-        ├── DiaryPage.tsx      (🚧 Placeholder)
-        ├── ExpensesPage.tsx   (🚧 Placeholder)
-        └── ProjectsPage.tsx   (🚧 Placeholder)
-```
-
-**Completed Pages:**
-- **Calendar:** Year heatmap (12 month grid with event counts), Month view (calendar grid with colored event chips), Day view (hourly time blocks)
-- **Tasks:** List pending/all tasks, toggle complete, delete
-- **Auth:** Login/register with error handling
-
+*Session End: App is running cleanly on localhost:8080 (backend) and localhost:5173 (frontend).*
 ---
 
-## Key Features Implemented
+## Session: 2026-08-29 - Tauri App Build and Modals (Continued)
 
-### Backend API Endpoints
-| Path | Method | What |
-|---|---|---|
-| `/api/auth/register` | POST | Sign up |
-| `/api/auth/login` | POST | Login (returns JWT) |
-| `/api/tasks` | GET/POST/PUT/DELETE | To-do list |
-| `/api/diary` | GET/PUT/DELETE | Diary (needs `X-Diary-Pin` header) |
-| `/api/diary/pin` | POST | Set diary PIN |
-| `/api/expenses` | GET/POST/DELETE | Expense tracker |
-| `/api/expenses/summary` | GET | Monthly total |
-| `/api/calendar/year/{year}` | GET | Year heatmap (month counts) |
-| `/api/calendar/day/{date}` | GET | Day view |
-| `/api/calendar` | GET/POST/PUT/DELETE | Calendar events (range query) |
-| `/api/projects` | GET/POST/PUT/DELETE | Projects |
+### 1. New Features Implemented
+- **Tasks Page**: Built and wired the `NewTaskModal` (Slide-in UI, title, description, due date).
+- **Calendar Page**: Built and wired the `NewEventModal` (Title, type: Task/Note, date, start time, end time, description).
+- Auto-updating UI: When new tasks/events are saved to the backend, they are instantly injected into the frontend state without reloading.
 
-### Security
-- JWT tokens with configurable expiration (default 24h)
-- BCrypt password hashing
-- Diary PIN stored as BCrypt hash (never plaintext)
-- CORS locked to Tauri + Expo dev origins
-- Stateless sessions (no server-side session storage)
+### 2. Desktop App (Tauri) Fixes
+- **Missing MSVC Linker**: The `npm run tauri dev` command was failing because the standard terminal `PATH` was picking up Git's `link.exe` instead of Microsoft's.
+- **Tauri Icons**: The build was also failing because the standard Windows icons (`icon.ico`, `icon.icns`) were missing from `src-tauri/icons`. Generated placeholder binaries for these immediately.
+- **Resolution**: Used a PowerShell wrapper to invoke `vcvars64.bat` explicitly, extract the `INCLUDE` and `LIB` variables for the Microsoft C++ Build Tools (v14.44.35207), and launched Tauri inside that environment. 
+- The Tauri desktop app successfully compiled its Rust backend crate and launched the native desktop window.
 
-### Reminders
-- Tasks and calendar events can have `remindAt` timestamps
-- `ReminderService` runs every 60 seconds via `@Scheduled`
-- Sends email via JavaMailSender (Gmail SMTP)
-- Marks `reminderSent = true` to avoid duplicates
-- Uses `@Transactional(noRollbackFor = Exception.class)` so one failed email doesn't rollback all reminder updates
-
----
-
-## Setup Instructions
-
-### Prerequisites
-- **Java 25** (installed ✅)
-- **PostgreSQL** (installed ✅, but need to create `clarity` database)
-- **Node.js 24+** (installed ✅ v24.19.0)
-- **Rust** (NOT installed yet — required for Tauri)
-
-### Install Rust
-```bash
-# Windows PowerShell
-winget install Rustlang.Rustup
-
-# or download from https://rustup.rs
-```
-
-### Backend Setup
-```bash
-cd backend
-
-# Copy .env.example → .env
-cp .env.example .env
-
-# Edit .env with:
-# DB_USERNAME=postgres
-# DB_PASSWORD=your_postgres_password
-# JWT_SECRET=some_long_random_string
-# MAIL_USERNAME=your_email@gmail.com
-# MAIL_PASSWORD=your_gmail_app_password
-
-# Create database (use -U postgres to specify user)
-createdb -U postgres clarity
-
-# Run backend
-mvn spring-boot:run
-```
-
-Backend starts at `http://localhost:8080`
-
-### Desktop Setup
-```bash
-cd desktop
-
-npm install
-npm run dev
-```
-
-Desktop app opens with hot reload.
-
----
-
-## Issues Encountered
-
-### 1. Spring Boot 4.0 doesn't exist yet
-- **Requested:** Upgrade to Spring Boot 4.0 + Java 25
-- **Reality:** Spring Boot 4.0 not released (latest is 3.5.3)
-- **Solution:** Upgraded to Spring Boot 3.5.3 (which fully supports Java 25)
-
-### 2. PostgreSQL authentication error
-- **Error:** `createdb: password authentication failed for user "r4712"`
-- **Cause:** `createdb` defaults to OS username, but PostgreSQL user doesn't match
-- **Solution:** Use `createdb -U postgres clarity` to explicitly specify the `postgres` superuser
-
----
-
-## What's Left to Build
-
-### High Priority (Core Features)
-- 🚧 **Diary Page:** Notebook-style UI with date rows (per your mockup photo)
-- 🚧 **Expenses Page:** List/add/delete expenses, monthly summary chart
-- 🚧 **Projects Page:** Kanban board or list view with status columns
-
-### Medium Priority (UX Polish)
-- Add event creation modal in Calendar page
-- Add task creation modal in Tasks page
-- Add diary PIN prompt modal
-- Dark mode toggle (Tailwind classes already support it)
-- Form validation UI feedback
-
-### Future (Stretch Goals)
-- 📱 **Mobile app:** React Native (Expo) — shares same backend
-- 🤖 **AI features:** Diary sentiment analysis, expense category suggestions
-- 🔔 **Desktop notifications:** Tauri supports native notifications
-- 📊 **Analytics dashboard:** Spending trends, task completion rates
-
----
-
-## Tech Decisions & Rationale
-
-### Why Tauri over Electron?
-- Smaller bundle size (~3MB vs ~100MB)
-- Native performance (Rust backend)
-- Better security model
-- Looks great on portfolio/LinkedIn
-
-### Why Spring Boot over Node.js?
-- You already know Spring Boot
-- Better for scheduled jobs (email reminders)
-- Strong typing with Java
-- Easier to scale if this grows
-
-### Why Zustand over Redux?
-- Simpler API (less boilerplate)
-- Built-in persistence middleware
-- Perfect for small/medium apps
-
-### Why Tailwind 4?
-- Latest version with new features
-- No PostCSS config needed with Vite plugin
-- Dark mode built-in
-
----
-
-## Git Push
-
-Pushed all changes to GitHub:
-- **Repo:** https://github.com/sahilparmar19/Clarity
-- **Commit:** "Initial Clarity scaffold: Spring Boot backend + Tauri desktop frontend"
-- **Files:** 68 files, ~2,900 lines
-
----
-
-## Next Session TODO
-
-1. ✅ Install Rust (`winget install Rustlang.Rustup`)
-2. ✅ Create PostgreSQL database (`createdb -U postgres clarity`)
-3. ✅ Configure backend `.env` file
-4. Run backend (`mvn spring-boot:run`)
-5. Run desktop (`npm run dev`)
-6. Test login → calendar views
-7. Build Diary page (notebook UI)
-8. Build Expenses page
-9. Build Projects page
-10. Mobile app scaffold (Expo)
-
----
-
-## Notes for Next Time
-
-- Backend is fully functional and tested (all endpoints work)
-- Calendar page is complete (year/month/day views working)
-- Tasks page is complete (list/toggle/delete working)
-- Diary/Expenses/Projects are placeholder pages
-- Need Rust installed before `npm run dev` will work
-- PostgreSQL needs the `clarity` database created first
-- `.env` file must be configured before backend starts
-
----
-
-**Session End:** 2026-08-29T09:13:27Z
-**Total Time:** ~2 hours
-**Lines of Code:** ~2,900
-**Files Created:** 68
+### 3. Current System State
+- **Backend**: Spring Boot running on `http://localhost:8080`.
+- **Frontend / Dev Server**: Vite serving React frontend on `http://localhost:5173`.
+- **Desktop**: Tauri compiling and running native `app.exe` (communicates with Vite and Spring Boot seamlessly).

@@ -14,7 +14,6 @@ export interface Task {
   dueAt?: string;
   remindAt?: string;
   reminderSent: boolean;
-  project?: Project;
   createdAt: string;
   updatedAt: string;
 }
@@ -26,17 +25,6 @@ export interface DiaryEntry {
   mood?: "HAPPY" | "NEUTRAL" | "SAD" | "ANXIOUS" | "EXCITED";
   createdAt: string;
   updatedAt: string;
-}
-
-export interface Expense {
-  id: number;
-  title: string;
-  note?: string;
-  amount: number;
-  currency: string;
-  category: string;
-  date: string; // ISO LocalDate
-  createdAt: string;
 }
 
 export interface CalendarEvent {
@@ -52,17 +40,8 @@ export interface CalendarEvent {
   createdAt: string;
 }
 
-export interface Project {
-  id: number;
-  name: string;
-  description?: string;
-  status: "TODO" | "IN_PROGRESS" | "DONE" | "ARCHIVED";
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface AuthResponse {
-  token: string;
+  userId: number;
   username: string;
 }
 

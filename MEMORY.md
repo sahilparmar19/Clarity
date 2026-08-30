@@ -1,0 +1,1 @@
+- [Session Notes 2026-08-30 (Local-First Rewrite)](memory/session_notes_2026_08_30.md)
