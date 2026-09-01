@@ -1,10 +1,14 @@
 import { useState, useEffect, useRef } from "react";
-import { Plus, Trash2, X, CalendarDays, AlignLeft, Loader2 } from "lucide-react";
+import {
+  Plus, Trash2, X, CalendarDays, AlignLeft,
+  Loader2, CheckCircle2, Circle, CheckSquare
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { api } from "@/lib/api";
 import type { Task } from "@/lib/types";
 import { clsx } from "clsx";
 
-// --- New Task Modal ---
+// ─── New Task Modal ──────────────────────────────────────────────────────────
 function NewTaskModal({
   onClose,
   onCreated,
@@ -17,10 +21,10 @@ function NewTaskModal({
   const [dueAt, setDueAt] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const titleRef = useRef<HTMLInputElement>(null);
+  const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    titleRef.current?.focus();
+    ref.current?.focus();
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -37,6 +41,25 @@ function NewTaskModal({
         description: description.trim() || undefined,
         dueAt: dueAt ? new Date(dueAt).toISOString() : undefined,
       });
+
+      // SYNC to Calendar: if the task has a due date, create a matching Calendar Event
+      if (dueAt) {
+        try {
+          // split "YYYY-MM-DDTHH:mm"
+          const datePart = dueAt.split("T")[0];
+          const timePart = dueAt.includes("T") ? dueAt.split("T")[1] : undefined;
+          await api.createCalendarEvent({
+            title: title.trim(),
+            description: description.trim() || undefined,
+            eventDate: datePart,
+            startAt: timePart ? `${datePart}T${timePart}:00` : undefined,
+            type: "TASK",
+          });
+        } catch (syncErr) {
+          console.warn("Could not sync task to calendar:", syncErr);
+        }
+      }
+
       onCreated(task);
       onClose();
     } catch (err: any) {
@@ -51,123 +74,96 @@ function NewTaskModal({
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="w-full max-w-md bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-200 dark:border-neutral-700 overflow-hidden">
-        {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 16 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 16 }}
+        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-md bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-100 dark:border-neutral-800 overflow-hidden"
+      >
         <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-100 dark:border-neutral-800">
-          <h2 className="text-lg font-semibold dark:text-white">New Task</h2>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-          >
-            <X className="w-5 h-5 text-neutral-500" />
+          <h2 className="text-base font-semibold dark:text-white">New Task</h2>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
+            <X className="w-4 h-4 text-neutral-500" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
-          {/* Title */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">
-              Title <span className="text-red-500">*</span>
-            </label>
-            <input
-              ref={titleRef}
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+            <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1.5">Title *</label>
+            <input ref={ref} type="text" value={title} onChange={(e) => setTitle(e.target.value)}
               placeholder="What needs to be done?"
-              className="w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition"
-            />
+              className="w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-400 transition text-sm" />
           </div>
-
-          {/* Description */}
           <div>
-            <label className="flex items-center gap-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">
-              <AlignLeft className="w-4 h-4" /> Description
+            <label className="flex items-center gap-1.5 text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1.5">
+              <AlignLeft className="w-3.5 h-3.5" /> Description
             </label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Add details (optional)..."
-              rows={3}
-              className="w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition resize-none"
-            />
+            <textarea value={description} onChange={(e) => setDescription(e.target.value)}
+              placeholder="Add details..." rows={3}
+              className="w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-400 transition text-sm resize-none" />
           </div>
-
-          {/* Due date */}
           <div>
-            <label className="flex items-center gap-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">
-              <CalendarDays className="w-4 h-4" /> Due date
+            <label className="flex items-center gap-1.5 text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1.5">
+              <CalendarDays className="w-3.5 h-3.5" /> Due date
             </label>
-            <input
-              type="datetime-local"
-              value={dueAt}
-              onChange={(e) => setDueAt(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition"
-            />
+            <input type="datetime-local" value={dueAt} onChange={(e) => setDueAt(e.target.value)}
+              className="w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-400 transition text-sm" />
           </div>
-
-          {error && (
-            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-          )}
-
-          {/* Actions */}
+          {error && <p className="text-xs text-red-500">{error}</p>}
           <div className="flex gap-3 pt-1">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition"
-            >
+            <button type="button" onClick={onClose}
+              className="flex-1 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition">
               Cancel
             </button>
-            <button
-              type="submit"
-              disabled={saving}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium hover:opacity-90 disabled:opacity-50 transition"
-            >
+            <button type="submit" disabled={saving}
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-sm font-semibold shadow-sm shadow-blue-200 dark:shadow-none disabled:opacity-50 transition">
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
               Create Task
             </button>
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }
 
-// --- Main Page ---
+// ─── Main Page ───────────────────────────────────────────────────────────────
 export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [pendingOnly, setPendingOnly] = useState(true);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    loadTasks();
-  }, [pendingOnly]);
+  useEffect(() => { loadTasks(); }, [pendingOnly]);
 
   const loadTasks = async () => {
     setLoading(true);
     try {
       const data = await api.getTasks(pendingOnly);
       setTasks(data);
-    } catch (err) {
-      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
   const toggleComplete = async (task: Task) => {
+    // Optimistic update
+    setTasks((prev) => prev.map((t) => (t.id === task.id ? { ...t, completed: !t.completed } : t)));
     try {
       await api.updateTask(task.id, { completed: !task.completed });
-      loadTasks();
-    } catch (err) {
-      console.error(err);
+      if (pendingOnly) {
+        setTimeout(() => {
+          setTasks((prev) => prev.filter((t) => t.id !== task.id));
+        }, 300); // Wait for animation
+      }
+    } catch {
+      // Revert
+      setTasks((prev) => prev.map((t) => (t.id === task.id ? { ...t, completed: task.completed } : t)));
     }
   };
 
   const deleteTask = async (id: number) => {
-    if (!confirm("Delete this task?")) return;
     try {
       await api.deleteTask(id);
       setTasks((prev) => prev.filter((t) => t.id !== id));
@@ -178,106 +174,121 @@ export default function TasksPage() {
 
   return (
     <div className="h-full flex flex-col">
-      {showModal && (
-        <NewTaskModal
-          onClose={() => setShowModal(false)}
-          onCreated={(t) => setTasks((prev) => [t, ...prev])}
-        />
-      )}
+      <AnimatePresence>
+        {showModal && (
+          <NewTaskModal onClose={() => setShowModal(false)} onCreated={(t) => setTasks((p) => [t, ...p])} />
+        )}
+      </AnimatePresence>
 
-      <div className="border-b p-6 flex items-center justify-between">
+      <div className="border-b border-neutral-100 dark:border-neutral-800 px-8 py-6 flex items-center justify-between bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl">
         <div>
-          <h2 className="text-2xl font-bold dark:text-white">Tasks</h2>
-          <p className="text-neutral-600 dark:text-neutral-400 mt-1">
-            Track your to-dos
-          </p>
+          <h2 className="text-2xl font-bold dark:text-white tracking-tight">Tasks</h2>
+          <p className="text-neutral-500 dark:text-neutral-400 mt-1 text-sm font-medium">Capture everything</p>
         </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 rounded-lg font-medium hover:opacity-90 transition"
+        <button onClick={() => setShowModal(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-xl shadow-sm text-sm font-semibold transition"
         >
-          <Plus className="w-4 h-4" />
-          New Task
+          <Plus className="w-4 h-4" /> New Task
         </button>
       </div>
 
-      <div className="p-6 flex-1 overflow-auto">
-        <div className="flex gap-2 mb-6">
-          {(["Pending", "All"] as const).map((label) => {
-            const active = label === "Pending" ? pendingOnly : !pendingOnly;
-            return (
-              <button
-                key={label}
-                onClick={() => setPendingOnly(label === "Pending")}
-                className={clsx(
-                  "px-4 py-2 rounded-lg font-medium transition",
-                  active
-                    ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
-                    : "bg-neutral-100 dark:bg-neutral-800 dark:text-neutral-300"
-                )}
-              >
-                {label}
-              </button>
-            );
-          })}
-        </div>
-
-        {loading ? (
-          <div className="flex items-center justify-center mt-20 text-neutral-400 gap-2">
-            <Loader2 className="w-5 h-5 animate-spin" /> Loading...
-          </div>
-        ) : tasks.length === 0 ? (
-          <div className="text-center text-neutral-500 mt-20">
-            <p className="text-lg font-medium">No tasks yet</p>
-            <p className="text-sm mt-1">Hit "New Task" to get started</p>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {tasks.map((task) => (
-              <div
-                key={task.id}
-                className="flex items-start gap-3 p-4 border border-neutral-200 dark:border-neutral-700 rounded-xl hover:shadow-md transition bg-white dark:bg-neutral-800/50"
-              >
-                <input
-                  type="checkbox"
-                  checked={task.completed}
-                  onChange={() => toggleComplete(task)}
-                  className="mt-0.5 w-5 h-5 cursor-pointer accent-neutral-900"
-                />
-                <div className="flex-1 min-w-0">
-                  <div
-                    className={clsx(
-                      "font-medium dark:text-white",
-                      task.completed && "line-through opacity-50"
-                    )}
-                  >
-                    {task.title}
-                  </div>
-                  {task.description && (
-                    <div className="text-sm text-neutral-500 dark:text-neutral-400 mt-1 truncate">
-                      {task.description}
-                    </div>
-                  )}
-                  {task.dueAt && (
-                    <div className="text-xs text-neutral-400 mt-1.5 flex items-center gap-1">
-                      <CalendarDays className="w-3 h-3" />
-                      Due {new Date(task.dueAt).toLocaleString(undefined, {
-                        dateStyle: "medium",
-                        timeStyle: "short",
-                      })}
-                    </div>
-                  )}
-                </div>
+      <div className="flex-1 overflow-auto p-8 relative">
+        <div className="max-w-3xl mx-auto">
+          {/* Tabs */}
+          <div className="flex gap-2 mb-8 bg-neutral-100/50 dark:bg-neutral-800/30 p-1 w-max rounded-xl">
+            {(["Pending", "All"] as const).map((lbl) => {
+              const active = lbl === "Pending" ? pendingOnly : !pendingOnly;
+              return (
                 <button
-                  onClick={() => deleteTask(task.id)}
-                  className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition"
+                  key={lbl}
+                  onClick={() => setPendingOnly(lbl === "Pending")}
+                  className={clsx(
+                    "relative z-10 px-4 py-1.5 text-sm font-semibold rounded-lg transition-colors duration-200",
+                    active ? "text-neutral-900 dark:text-white" : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300"
+                  )}
                 >
-                  <Trash2 className="w-4 h-4" />
+                  {active && (
+                    <motion.div layoutId="task-tab-bg"
+                      className="absolute inset-0 bg-white dark:bg-neutral-700 rounded-lg shadow-sm -z-10"
+                      transition={{ type: "spring", stiffness: 400, damping: 35 }}
+                    />
+                  )}
+                  {lbl}
                 </button>
-              </div>
-            ))}
+              );
+            })}
           </div>
-        )}
+
+          {loading ? (
+            <div className="flex items-center justify-center mt-20 text-neutral-400 gap-2">
+              <Loader2 className="w-5 h-5 animate-spin" /> Loading…
+            </div>
+          ) : tasks.length === 0 ? (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center mt-24">
+              <div className="w-16 h-16 bg-neutral-100 dark:bg-neutral-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckSquare className="w-8 h-8 text-neutral-300 dark:text-neutral-600" />
+              </div>
+              <h3 className="text-lg font-semibold dark:text-white">All caught up!</h3>
+              <p className="text-neutral-500 mt-1">Nothing to do right now.</p>
+            </motion.div>
+          ) : (
+            <div className="space-y-3">
+              <AnimatePresence initial={false}>
+                {tasks.map((task) => (
+                  <motion.div
+                    key={task.id}
+                    layout
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
+                    className="group flex items-start gap-3 p-4 border border-neutral-200/50 dark:border-neutral-700/50 rounded-2xl bg-white/80 dark:bg-neutral-800/60 hover:shadow-sm hover:border-neutral-300 dark:hover:border-neutral-600 transition-all backdrop-blur-xl"
+                  >
+                    <button
+                      onClick={() => toggleComplete(task)}
+                      className="mt-0.5 flex-shrink-0 text-neutral-300 hover:text-blue-500 dark:text-neutral-600 dark:hover:text-blue-400 transition-colors"
+                    >
+                      {task.completed ? (
+                        <CheckCircle2 className="w-6 h-6 text-blue-500" />
+                      ) : (
+                        <Circle className="w-6 h-6" />
+                      )}
+                    </button>
+                    <div className="flex-1 min-w-0">
+                      <div className={clsx(
+                        "text-[15px] font-medium transition-colors",
+                        task.completed ? "text-neutral-400 line-through dark:text-neutral-500" : "text-neutral-800 dark:text-neutral-100"
+                      )}>
+                        {task.title}
+                      </div>
+                      {task.description && (
+                        <div className="text-sm text-neutral-500 mt-0.5 line-clamp-2">
+                          {task.description}
+                        </div>
+                      )}
+                      {task.dueAt && (
+                        <div className={clsx(
+                          "mt-2 inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-semibold",
+                          new Date(task.dueAt).getTime() < Date.now() && !task.completed
+                            ? "bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400"
+                            : "bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400"
+                        )}>
+                          <CalendarDays className="w-3.5 h-3.5" />
+                          {new Date(task.dueAt).toLocaleString(undefined, { dateStyle: "long", timeStyle: "short" })}
+                        </div>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => deleteTask(task.id)}
+                      className="opacity-0 group-hover:opacity-100 p-2 text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

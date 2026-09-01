@@ -17,6 +17,9 @@ export default defineConfig({
   server: {
     port: 5173,
     strictPort: true,
+    watch: {
+      ignored: ["**/src-tauri/**"], // Avoid EBUSY errors on Rust target build files
+    },
   },
   // Vite's env vars exposed to the frontend
   envPrefix: ["VITE_", "TAURI_"],

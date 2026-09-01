@@ -53,3 +53,37 @@ pub struct AuthResponse {
     pub user_id: i64,
     pub username: String,
 }
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct Expense {
+    pub id: i64,
+    pub amount: f64,
+    pub category: String,
+    pub description: Option<String>,
+    pub date: String,
+    #[serde(rename = "type")]
+    pub expense_type: String, // EXPENSE or INCOME
+    pub created_at: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct Project {
+    pub id: i64,
+    pub title: String,
+    pub description: Option<String>,
+    pub created_at: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct ProjectTask {
+    pub id: i64,
+    pub project_id: i64,
+    pub title: String,
+    pub description: Option<String>,
+    pub status: String,
+    pub created_at: String,
+}
+

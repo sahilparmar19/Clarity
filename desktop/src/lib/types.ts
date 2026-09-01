@@ -28,6 +28,7 @@ export interface DiaryEntry {
 }
 
 export interface CalendarEvent {
+  completed?: boolean;
   id: number;
   title: string;
   description?: string;
@@ -54,4 +55,34 @@ export interface RegisterRequest {
 export interface LoginRequest {
   username: string;
   password: string;
+}
+
+export type ExpenseType = "EXPENSE" | "INCOME";
+
+export interface Expense {
+  id: number;
+  amount: number;
+  category: string;
+  description?: string;
+  date: string;
+  type: ExpenseType;
+  createdAt: string;
+}
+
+export interface Project {
+  id: number;
+  title: string;
+  description?: string;
+  createdAt: string;
+}
+
+export type ProjectTaskStatus = "TODO" | "IN_PROGRESS" | "DONE";
+
+export interface ProjectTask {
+  id: number;
+  projectId: number;
+  title: string;
+  description?: string;
+  status: ProjectTaskStatus;
+  createdAt: string;
 }

@@ -1,4 +1,4 @@
-use rusqlite::{Connection, params};
+use rusqlite::Connection;
 use std::path::PathBuf;
 use std::sync::Mutex;
 use once_cell::sync::Lazy;
@@ -64,6 +64,34 @@ fn init_tables(conn: &Connection) {
             start_at    TEXT,
             end_at      TEXT,
             event_type  TEXT NOT NULL DEFAULT 'NOTE',
+            created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+
+        CREATE TABLE IF NOT EXISTS expenses (
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id     INTEGER NOT NULL REFERENCES users(id),
+            amount      REAL NOT NULL,
+            category    TEXT NOT NULL,
+            description TEXT,
+            date        TEXT NOT NULL,
+            type        TEXT NOT NULL DEFAULT 'EXPENSE',
+            created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+
+        CREATE TABLE IF NOT EXISTS projects (
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id     INTEGER NOT NULL REFERENCES users(id),
+            title       TEXT NOT NULL,
+            description TEXT,
+            created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+
+        CREATE TABLE IF NOT EXISTS project_tasks (
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            project_id  INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+            title       TEXT NOT NULL,
+            description TEXT,
+            status      TEXT NOT NULL DEFAULT 'TODO',
             created_at  TEXT NOT NULL DEFAULT (datetime('now'))
         );
     ").expect("Failed to create tables");

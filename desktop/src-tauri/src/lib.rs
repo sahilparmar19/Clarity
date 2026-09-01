@@ -23,6 +23,16 @@ pub fn run() {
             commands::get_year_heatmap,
             commands::create_calendar_event,
             commands::delete_calendar_event,
+            commands::get_expenses,
+            commands::create_expense,
+            commands::delete_expense,
+            commands::get_projects,
+            commands::create_project,
+            commands::delete_project,
+            commands::get_project_tasks,
+            commands::create_project_task,
+            commands::update_project_task_status,
+            commands::delete_project_task,
         ])
         .run(tauri::generate_context!())
         .expect("error running Clarity");
