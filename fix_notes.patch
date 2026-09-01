@@ -1,7 +1,0 @@
---- C:/Clarity/desktop/src/pages/CalendarPage.tsx
-+++ C:/Clarity/desktop/src/pages/CalendarPage.tsx
-@@ -4,3 +4,3 @@
-   CalendarDays, Clock, Loader2, CheckSquare, StickyNote, AlignLeft,
--  Plus, X
-+  Plus, X, Trash2, Pencil, Check
- } from "lucide-react";
