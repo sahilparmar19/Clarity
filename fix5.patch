@@ -1,0 +1,27 @@
+--- C:/Clarity/desktop/src/pages/CalendarPage.tsx
++++ C:/Clarity/desktop/src/pages/CalendarPage.tsx
+@@ -482,6 +482,23 @@
+   const [text, setText] = useState("");
+   const [saving, setSaving] = useState(false);
+   const textareaRef = useRef<HTMLTextAreaElement>(null);
++  const [editId, setEditId] = useState<number | null>(null);
++  const [editText, setEditText] = useState("");
++
++  const handleEdit = (note: CalendarEvent) => {
++    setEditId(note.id);
++    setEditText(note.title);
++  };
++
++  const handleSaveEdit = async () => {
++    if (!editId) return;
++    await api.updateCalendarEvent(editId, editText.trim());
++    setEditId(null);
++    if (typeof onReload === 'function') onReload();
++  };
++
++  const handleDelete = async (id: number) => {
++    if (confirm("Delete this note?")) {
++      await api.deleteCalendarEvent(id);
++      if (typeof onReload === 'function') onReload();
++    }
++  };

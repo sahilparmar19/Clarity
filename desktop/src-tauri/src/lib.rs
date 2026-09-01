@@ -23,6 +23,7 @@ pub fn run() {
             commands::get_year_heatmap,
             commands::create_calendar_event,
             commands::delete_calendar_event,
+            commands::update_calendar_event,
             commands::get_expenses,
             commands::create_expense,
             commands::delete_expense,

@@ -488,34 +488,11 @@ function DiaryDayCard({
   date: string;
   notes: CalendarEvent[];
   onCreated: (e: CalendarEvent) => void;
-  onReload: () => void;
 }) {
   const d = dayjs(date);
   const [text, setText] = useState("");
   const [saving, setSaving] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const [editId, setEditId] = useState<number | null>(null);
-  const [editText, setEditText] = useState("");
-
-  const handleEdit = (note: CalendarEvent) => {
-    setEditId(note.id);
-    setEditText(note.title);
-  };
-
-  const handleSaveEdit = async () => {
-    if (!editId) return;
-    await api.updateCalendarEvent(editId, editText.trim());
-    setEditId(null);
-    onReload();
-  };
-
-  const handleDelete = async (id: number) => {
-    if (confirm("Delete this note?")) {
-      await api.deleteCalendarEvent(id);
-      onReload();
-    }
-  };
 
   const handleSave = async () => {
     const trimmed = text.trim();
@@ -567,34 +544,15 @@ function DiaryDayCard({
       </div>
 
       {/* Body */}
-      <div className="bg-[#FAF9F5] dark:bg-neutral-900 border border-t-0 border-neutral-200/70 dark:border-neutral-800 rounded-b-xl px-5 pt-4 pb-5 mb-4 shadow-sm">
+      <div className="bg-white dark:bg-neutral-900 border border-t-0 border-neutral-200/70 dark:border-neutral-800 rounded-b-xl px-5 pt-4 pb-5 mb-4">
         {/* Existing notes */}
         {notes.map((note) => (
-          <div key={note.id} className="group relative flex flex-col mb-3">
-            {editId === note.id ? (
-              <div className="flex items-start gap-2 mb-2">
-                <input
-                  className="flex-1 px-3 py-1.5 border border-indigo-300 dark:border-indigo-800 rounded outline-none text-sm bg-white dark:bg-neutral-800"
-                  value={editText}
-                  onChange={e => setEditText(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && handleSaveEdit()}
-                  autoFocus
-                />
-                <button onClick={handleSaveEdit} className="p-1.5 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded"><Check className="w-4 h-4"/></button>
-                <button onClick={() => setEditId(null)} className="p-1.5 bg-neutral-200 hover:bg-neutral-300 transition rounded"><X className="w-4 h-4 text-neutral-700"/></button>
-              </div>
-            ) : (
-              <>
-                <p className="text-neutral-800 dark:text-neutral-200 text-[15px] leading-relaxed pl-1 border-l-2 border-indigo-200 dark:border-indigo-900">
-                  {note.title}
-                </p>
-                <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition flex gap-1 bg-[#FAF9F5] dark:bg-neutral-900 px-1 rounded shadow-sm">
-                  <button onClick={() => handleEdit(note)} className="p-1 text-neutral-400 hover:text-indigo-500 rounded"><Pencil className="w-3.5 h-3.5"/></button>
-                  <button onClick={() => handleDelete(note.id)} className="p-1 text-neutral-400 hover:text-red-500 rounded"><Trash2 className="w-3.5 h-3.5"/></button>
-                </div>
-              </>
-            )}
-          </div>
+          <p
+            key={note.id}
+            className="text-neutral-800 dark:text-neutral-200 text-[15px] leading-relaxed mb-2 pl-1 border-l-2 border-neutral-200 dark:border-neutral-700"
+          >
+            {note.title}
+          </p>
         ))}
 
         {/* Inline write area */}
@@ -629,16 +587,33 @@ function DiaryDayCard({
 
 // ─── Quick-add note modal (for "Add Day" button) ──────────────────────────────
 function QuickAddNoteModal({
-  date, onClose, onAdded,
+  date, onClose, onCreated,
 }: {
   date: string;
   onClose: () => void;
-  onAdded: (date: string) => void;
+  onCreated: (e: CalendarEvent) => void;
 }) {
   const [selectedDate, setSelectedDate] = useState(date);
+  const [text, setText] = useState("");
+  const [saving, setSaving] = useState(false);
 
-  const handleSave = () => {
-    onAdded(selectedDate);
+  const handleSave = async () => {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    setSaving(true);
+    try {
+      const created = await api.createCalendarEvent({
+        title: trimmed,
+        description: undefined,
+        eventDate: selectedDate,
+        type: "NOTE",
+      });
+      onCreated(created);
+    } catch {
+      // noop
+    } finally {
+      setSaving(false);
+    }
   };
 
   useEffect(() => {
@@ -657,7 +632,7 @@ function QuickAddNoteModal({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 12 }}
         transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-sm bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-100 dark:border-neutral-800 overflow-hidden"
+        className="w-full max-w-lg bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-100 dark:border-neutral-800 overflow-hidden"
       >
         {/* Date header */}
         <div className="bg-[#EDE9DF] dark:bg-neutral-800 px-6 py-4 flex items-center justify-between">
@@ -669,40 +644,39 @@ function QuickAddNoteModal({
               {dayjs(selectedDate).format("MMM, dddd").toUpperCase()}
             </span>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/60 dark:hover:bg-neutral-700 transition">
-            <X className="w-4 h-4 text-neutral-500" />
-          </button>
-        </div>
-
-        <div className="p-6 space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">
-              Select Date
-            </label>
+          <div className="flex items-center gap-2">
             <input
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-400 text-sm"
+              className="text-xs bg-white/70 dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded-lg px-2 py-1.5 outline-none focus:ring-2 focus:ring-indigo-400 dark:text-white"
             />
+            <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/60 dark:hover:bg-neutral-700 transition">
+              <X className="w-4 h-4 text-neutral-500" />
+            </button>
           </div>
+        </div>
 
-          <div className="flex justify-end gap-2 pt-2 border-t border-neutral-100 dark:border-neutral-800">
+        <div className="p-6">
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="Write your thoughts here..."
+            rows={5}
+            autoFocus
+            className="w-full bg-transparent resize-none outline-none text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-300 dark:placeholder:text-neutral-600 text-[15px] leading-relaxed"
+          />
+          <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-neutral-100 dark:border-neutral-800">
             <button onClick={onClose}
               className="px-4 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition">
               Cancel
             </button>
-            <button onClick={handleSave}
-              className="flex items-center gap-2 px-5 py-2 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-semibold text-sm hover:bg-neutral-700 dark:hover:bg-neutral-100 transition">
-              <Plus className="w-3.5 h-3.5" />
-              Add Day
+            <button onClick={handleSave} disabled={saving || !text.trim()}
+              className="flex items-center gap-2 px-5 py-2 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-semibold text-sm hover:bg-neutral-700 dark:hover:bg-neutral-100 transition disabled:opacity-50">
+              {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
+              Add Note
             </button>
           </div>
-        </div>
-      </motion.div>
-    </div>
-  );
-}
         </div>
       </motion.div>
     </div>

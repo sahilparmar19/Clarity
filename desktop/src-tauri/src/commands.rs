@@ -313,6 +313,14 @@ pub fn delete_calendar_event(id: i64) -> Result<(), String> {
     Ok(())
 }
 
+#[tauri::command]
+pub fn update_calendar_event(id: i64, title: String) -> Result<(), String> {
+    let db = get_db();
+    db.execute("UPDATE calendar_events SET title = ?1 WHERE id = ?2", params![title, id])
+        .map_err(|e| e.to_string())?;
+    Ok(())
+}
+
 // ─── Expenses ────────────────────────────────────────────────────────────────
 
 #[tauri::command]

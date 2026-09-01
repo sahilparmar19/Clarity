@@ -1,0 +1,16 @@
+--- C:/Clarity/desktop/src-tauri/src/commands.rs
++++ C:/Clarity/desktop/src-tauri/src/commands.rs
+@@ -313,6 +313,29 @@
+         .map_err(|e| e.to_string())?;
+     Ok(())
+ }
++
++#[tauri::command]
++pub fn update_calendar_event(id: i64, title: String) -> Result<(), String> {
++    let db = get_db();
++    db.execute(
++        "UPDATE calendar_events SET title = ?1 WHERE id = ?2",
++        params![title, id]
++    ).map_err(|e| e.to_string())?;
++    Ok(())
++}

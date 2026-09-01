@@ -1,0 +1,35 @@
+--- C:/Clarity/desktop/src/pages/CalendarPage.tsx
++++ C:/Clarity/desktop/src/pages/CalendarPage.tsx
+@@ -401,31 +401,23 @@
+   const [showAll, setShowAll] = useState(false);
+   const [addingDate, setAddingDate] = useState<string | null>(null);
++  const [manualDates, setManualDates] = useState<string[]>([]);
+ 
+   // Group events by date
+   const byDate: Record<string, CalendarEvent[]> = {};
++  const allDateStrings = new Set<string>();
+   events.forEach((e) => {
+     if (!byDate[e.eventDate]) byDate[e.eventDate] = [];
+     byDate[e.eventDate].push(e);
++    allDateStrings.add(e.eventDate);
+   });
+-
+-  // Build date list: last 7 days by default, or last 90 days if showAll
+-  const count = showAll ? 90 : 7;
+-  const days = Array.from({ length: count }, (_, i) =>
+-    dayjs().subtract(i, "day").format("YYYY-MM-DD")
+-  );
++  manualDates.forEach(d => allDateStrings.add(d));
++  let days = Array.from(allDateStrings).sort((a,b) => b.localeCompare(a));
++  if (!showAll) days = days.slice(0, 7);
+ 
+   const handleCreated = (e: CalendarEvent) => {
+     onCreated(e);
+-    setAddingDate(null);
+   };
+ 
+   return (
+-    <div className="max-w-3xl mx-auto px-4 py-8 space-y-0">
++    <div className="max-w-5xl mx-auto px-6 py-8 space-y-4">
+       {days.map((date) => (
+         <DiaryDayCard

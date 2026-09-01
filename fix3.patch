@@ -1,0 +1,78 @@
+--- C:/Clarity/desktop/src/pages/CalendarPage.tsx
++++ C:/Clarity/desktop/src/pages/CalendarPage.tsx
+@@ -477,6 +477,7 @@
+ }: {
+   date: string;
+   notes: CalendarEvent[];
+   onCreated: (e: CalendarEvent) => void;
++  onReload: () => void;
+ }) {
+   const d = dayjs(date);
+   const [text, setText] = useState("");
+@@ -522,6 +523,28 @@
+     e.target.style.height = "auto";
+     e.target.style.height = Math.min(e.target.scrollHeight, 200) + "px";
+   };
++
++  const [editId, setEditId] = useState<number | null>(null);
++  const [editText, setEditText] = useState("");
++
++  const handleEdit = (note: CalendarEvent) => {
++    setEditId(note.id);
++    setEditText(note.title);
++  };
++
++  const handleSaveEdit = async () => {
++    if (!editId) return;
++    await api.updateCalendarEvent(editId, editText.trim());
++    setEditId(null);
++    onReload();
++  };
++
++  const handleDelete = async (id: number) => {
++    if (confirm("Delete this note?")) {
++      await api.deleteCalendarEvent(id);
++      onReload();
++    }
++  };
+ 
+   return (
+     <div className="mb-1">
+@@ -536,13 +558,35 @@
+       <div className="bg-white dark:bg-neutral-900 border border-t-0 border-neutral-200/70 dark:border-neutral-800 rounded-b-xl px-5 pt-4 pb-5 mb-4">
+         {/* Existing notes */}
+         {notes.map((note) => (
+-          <p
+-            key={note.id}
+-            className="text-neutral-800 dark:text-neutral-200 text-[15px] leading-relaxed mb-2 pl-1 border-l-2 border-neutral-200 dark:border-neutral-700"
+-          >
+-            {note.title}
+-          </p>
++          <div key={note.id} className="group relative flex flex-col mb-3">
++            {editId === note.id ? (
++              <div className="flex items-start gap-2">
++                <input
++                  className="flex-1 px-3 py-1.5 border border-indigo-300 rounded outline-none"
++                  value={editText}
++                  onChange={e => setEditText(e.target.value)}
++                  onKeyDown={e => e.key === 'Enter' && handleSaveEdit()}
++                  autoFocus
++                />
++                <button onClick={handleSaveEdit} className="p-1.5 bg-indigo-500 text-white rounded"><Check className="w-4 h-4"/></button>
++                <button onClick={() => setEditId(null)} className="p-1.5 bg-neutral-200 rounded"><X className="w-4 h-4"/></button>
++              </div>
++            ) : (
++              <>
++                <p className="text-neutral-800 dark:text-neutral-200 text-[15px] leading-relaxed pl-1 border-l-2 border-neutral-200 dark:border-neutral-700">
++                  {note.title}
++                </p>
++                <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition flex gap-1 bg-white/80 dark:bg-neutral-900/80 px-1 shadow-sm rounded">
++                  <button onClick={() => handleEdit(note)} className="p-1 text-neutral-400 hover:text-indigo-500"><Pencil className="w-3.5 h-3.5"/></button>
++                  <button onClick={() => handleDelete(note.id)} className="p-1 text-neutral-400 hover:text-red-500"><Trash2 className="w-3.5 h-3.5"/></button>
++                </div>
++              </>
++            )}
++          </div>
+         ))}
+ 
+         {/* Inline write area */}

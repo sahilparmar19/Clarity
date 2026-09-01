@@ -22,14 +22,14 @@ export default function Layout() {
   ];
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#F5F3EE] dark:bg-neutral-950">
+    <div className="flex h-screen overflow-hidden bg-[#EDE9DF] dark:bg-neutral-950">
       {/* ── Sidebar ──────────────────────────────────────────── */}
-      <aside className="w-56 flex-shrink-0 bg-white dark:bg-neutral-900 border-r border-neutral-200/70 dark:border-neutral-800 flex flex-col z-20">
+      <aside className="w-56 flex-shrink-0 bg-[#FAF9F5] dark:bg-neutral-900 border-r border-neutral-200/70 dark:border-neutral-800 flex flex-col z-20 shadow-sm">
         {/* Logo */}
         <div className="px-6 pt-6 pb-5">
           <div className="flex items-center gap-2.5 mb-6">
             {/* Simple book icon like the diary reference */}
-            <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center flex-shrink-0 shadow-sm">
               <BookOpen className="w-4 h-4 text-white" />
             </div>
             <span className="text-lg font-bold tracking-tight text-neutral-900 dark:text-white">Clarity</span>
@@ -52,8 +52,8 @@ export default function Layout() {
                 clsx(
                   "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 group text-[14px] font-medium",
                   isActive
-                    ? "bg-indigo-50 dark:bg-indigo-900/25 text-indigo-700 dark:text-indigo-300"
-                    : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800/60 hover:text-neutral-900 dark:hover:text-neutral-200"
+                    ? "bg-[#EDE9DF] dark:bg-indigo-900/25 text-neutral-900 dark:text-indigo-300 font-semibold shadow-xs"
+                    : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200/50 dark:hover:bg-neutral-800/60 hover:text-neutral-900 dark:hover:text-neutral-200"
                 )
               }
             >
@@ -61,7 +61,7 @@ export default function Layout() {
                 <>
                   <link.icon className={clsx(
                     "w-[18px] h-[18px] flex-shrink-0",
-                    isActive ? "text-indigo-600 dark:text-indigo-400" : "text-neutral-400 dark:text-neutral-500 group-hover:text-neutral-600 dark:group-hover:text-neutral-300"
+                    isActive ? "text-neutral-900 dark:text-indigo-400" : "text-neutral-400 dark:text-neutral-500 group-hover:text-neutral-600 dark:group-hover:text-neutral-300"
                   )} />
                   <span>{link.label}</span>
                 </>
@@ -71,7 +71,7 @@ export default function Layout() {
         </nav>
 
         {/* Sign out */}
-        <div className="p-3 border-t border-neutral-100 dark:border-neutral-800">
+        <div className="p-3 border-t border-neutral-200/60 dark:border-neutral-800">
           <button
             onClick={logout}
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl w-full text-[14px] font-medium text-neutral-500 dark:text-neutral-400 hover:bg-red-50 dark:hover:bg-red-900/10 hover:text-red-600 dark:hover:text-red-400 transition-colors group"
@@ -83,7 +83,7 @@ export default function Layout() {
       </aside>
 
       {/* ── Main content ──────────────────────────────────────── */}
-      <main className="flex-1 relative overflow-auto bg-[#F5F3EE] dark:bg-neutral-950 page-transition">
+      <main className="flex-1 relative overflow-auto bg-[#EDE9DF] dark:bg-neutral-950 page-transition">
         <Outlet />
       </main>
     </div>

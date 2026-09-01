@@ -110,6 +110,10 @@ class ApiClient {
     });
   }
 
+  async updateCalendarEvent(id: number, title: string): Promise<void> {
+    return invoke("update_calendar_event", { id, title });
+  }
+
   async deleteCalendarEvent(id: number): Promise<void> {
     return invoke("delete_calendar_event", { id });
   }
