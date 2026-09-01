@@ -228,7 +228,7 @@ export default function CalendarPage() {
   const defaultDate = currentDate.format("YYYY-MM-DD");
 
   return (
-    <div className="h-full flex flex-col bg-[#FAFAF8] dark:bg-neutral-950">
+    <div className="h-full flex flex-col bg-[#EDE9DF] dark:bg-neutral-950">
       <AnimatePresence>
         {showTaskModal && (
           <AddTaskModal
@@ -240,7 +240,7 @@ export default function CalendarPage() {
       </AnimatePresence>
 
       {/* ── Header ─────────────────────────────────────────────── */}
-      <div className="shrink-0 bg-white dark:bg-neutral-900 border-b border-neutral-200/70 dark:border-neutral-800">
+      <div className="shrink-0 bg-[#FAF9F5] dark:bg-neutral-900 border-b border-neutral-200/70 dark:border-neutral-800 shadow-xs">
         {/* Top row: title + nav + add button */}
         <div className="px-6 pt-5 pb-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
@@ -404,7 +404,12 @@ function NotesFeed({
 
   // Group events by date
   const byDate: Record<string, CalendarEvent[]> = {};
-  const allDateStrings = new Set<string>();
+
+  // Always include the last 7 days by default so the user has immediate day cards
+  const defaultRecentDays = Array.from({ length: 7 }, (_, i) =>
+    dayjs().subtract(i, "day").format("YYYY-MM-DD")
+  );
+  const allDateStrings = new Set<string>(defaultRecentDays);
 
   events.forEach((e) => {
     if (!byDate[e.eventDate]) byDate[e.eventDate] = [];
@@ -542,7 +547,7 @@ function DiaryDayCard({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if ((e.key === "Enter" && (e.ctrlKey || e.metaKey))) {
       e.preventDefault();
       handleSave();
     }
@@ -551,19 +556,26 @@ function DiaryDayCard({
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
     e.target.style.height = "auto";
-    e.target.style.height = Math.min(e.target.scrollHeight, 200) + "px";
+    e.target.style.height = Math.min(e.target.scrollHeight, 220) + "px";
   };
 
   return (
     <div className="mb-1">
       {/* Date header — styled like the diary screenshot */}
-      <div className="bg-[#EDE9DF] dark:bg-neutral-800/60 rounded-t-xl px-5 py-3">
-        <span className="text-2xl font-bold text-neutral-900 dark:text-white mr-2">
-          {d.format("DD")}
-        </span>
-        <span className="text-sm font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">
-          {d.format("MMM, dddd").toUpperCase()}
-        </span>
+      <div className="bg-[#EDE9DF] dark:bg-neutral-800/60 rounded-t-xl px-5 py-3 flex items-center justify-between">
+        <div>
+          <span className="text-2xl font-bold text-neutral-900 dark:text-white mr-2">
+            {d.format("DD")}
+          </span>
+          <span className="text-sm font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">
+            {d.format("MMM, dddd").toUpperCase()}
+          </span>
+        </div>
+        {notes.length > 0 && (
+          <span className="text-xs font-medium text-neutral-400 dark:text-neutral-500">
+            {notes.length} note{notes.length > 1 ? "s" : ""}
+          </span>
+        )}
       </div>
 
       {/* Body */}
@@ -572,25 +584,48 @@ function DiaryDayCard({
         {notes.map((note) => (
           <div key={note.id} className="group relative flex flex-col mb-3">
             {editId === note.id ? (
-              <div className="flex items-start gap-2 mb-2">
-                <input
-                  className="flex-1 px-3 py-1.5 border border-indigo-300 dark:border-indigo-800 rounded outline-none text-sm bg-white dark:bg-neutral-800"
+              <div className="flex flex-col gap-2 mb-2 p-2 bg-white dark:bg-neutral-800/80 rounded-xl border border-indigo-200 dark:border-indigo-800/60 shadow-xs">
+                <textarea
+                  rows={2}
+                  className="w-full px-2 py-1 outline-none text-sm bg-transparent text-neutral-900 dark:text-neutral-100 resize-none"
                   value={editText}
                   onChange={e => setEditText(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && handleSaveEdit()}
+                  onKeyDown={e => {
+                    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+                      e.preventDefault();
+                      handleSaveEdit();
+                    } else if (e.key === "Escape") {
+                      setEditId(null);
+                    }
+                  }}
                   autoFocus
                 />
-                <button onClick={handleSaveEdit} className="p-1.5 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded"><Check className="w-4 h-4"/></button>
-                <button onClick={() => setEditId(null)} className="p-1.5 bg-neutral-200 hover:bg-neutral-300 transition rounded"><X className="w-4 h-4 text-neutral-700"/></button>
+                <div className="flex items-center justify-between pt-1 border-t border-neutral-100 dark:border-neutral-700">
+                  <span className="text-[11px] text-neutral-400">Press Ctrl+Enter to save</span>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => setEditId(null)}
+                      className="px-2.5 py-1 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleSaveEdit}
+                      className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition"
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
               </div>
             ) : (
               <>
-                <p className="text-neutral-800 dark:text-neutral-200 text-[15px] leading-relaxed pl-1 border-l-2 border-indigo-200 dark:border-indigo-900">
+                <p className="text-neutral-800 dark:text-neutral-200 text-[15px] leading-relaxed pl-2 border-l-2 border-indigo-400/60 dark:border-indigo-500 whitespace-pre-wrap">
                   {note.title}
                 </p>
                 <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition flex gap-1 bg-[#FAF9F5] dark:bg-neutral-900 px-1 rounded shadow-sm">
-                  <button onClick={() => handleEdit(note)} className="p-1 text-neutral-400 hover:text-indigo-500 rounded"><Pencil className="w-3.5 h-3.5"/></button>
-                  <button onClick={() => handleDelete(note.id)} className="p-1 text-neutral-400 hover:text-red-500 rounded"><Trash2 className="w-3.5 h-3.5"/></button>
+                  <button onClick={() => handleEdit(note)} title="Edit note" className="p-1 text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded transition"><Pencil className="w-3.5 h-3.5"/></button>
+                  <button onClick={() => handleDelete(note.id)} title="Delete note" className="p-1 text-neutral-400 hover:text-red-600 dark:hover:text-red-400 rounded transition"><Trash2 className="w-3.5 h-3.5"/></button>
                 </div>
               </>
             )}
@@ -604,22 +639,27 @@ function DiaryDayCard({
             value={text}
             onChange={handleInput}
             onKeyDown={handleKeyDown}
-            placeholder="Write your thoughts here..."
+            placeholder="Write your thoughts here... (Ctrl+Enter to save)"
             rows={2}
-            className="w-full bg-transparent resize-none outline-none text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-300 dark:placeholder:text-neutral-600 text-[15px] leading-relaxed"
-            style={{ minHeight: "52px" }}
+            className="w-full bg-transparent resize-none outline-none text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400/70 dark:placeholder:text-neutral-600 text-[15px] leading-relaxed"
+            style={{ minHeight: "48px" }}
           />
           {text.trim() && (
-            <motion.button
+            <motion.div
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              onClick={handleSave}
-              disabled={saving}
-              className="mt-2 flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-semibold hover:bg-neutral-700 dark:hover:bg-neutral-100 transition disabled:opacity-50"
+              className="flex items-center justify-between mt-2 pt-2 border-t border-neutral-200/50 dark:border-neutral-800"
             >
-              {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
-              Save
-            </motion.button>
+              <span className="text-[11px] text-neutral-400">Ctrl+Enter to save</span>
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-semibold hover:bg-neutral-700 dark:hover:bg-neutral-100 transition disabled:opacity-50 shadow-xs"
+              >
+                {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
+                Save Note
+              </button>
+            </motion.div>
           )}
         </div>
       </div>
@@ -698,11 +738,6 @@ function QuickAddNoteModal({
               Add Day
             </button>
           </div>
-        </div>
-      </motion.div>
-    </div>
-  );
-}
         </div>
       </motion.div>
     </div>

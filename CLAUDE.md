@@ -14,4 +14,3 @@ What will be In app
 * sync with email, so it can remind me of my task
 * AI? if possible
 
-

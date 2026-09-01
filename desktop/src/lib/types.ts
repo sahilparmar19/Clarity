@@ -65,7 +65,7 @@ export interface Expense {
   category: string;
   description?: string;
   date: string;
-  type: ExpenseType;
+  expenseType: ExpenseType;
   createdAt: string;
 }
 

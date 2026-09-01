@@ -62,7 +62,6 @@ pub struct Expense {
     pub category: String,
     pub description: Option<String>,
     pub date: String,
-    #[serde(rename = "type")]
     pub expense_type: String, // EXPENSE or INCOME
     pub created_at: String,
 }

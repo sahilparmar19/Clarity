@@ -6,8 +6,8 @@ use crate::models::*;
 
 #[tauri::command]
 pub fn register(username: String, email: String, password: String) -> Result<AuthResponse, String> {
-    let db = get_db();
     let hashed = bcrypt::hash(&password, 10).map_err(|e| e.to_string())?;
+    let db = get_db();
     db.execute(
         "INSERT INTO users (username, email, password) VALUES (?1, ?2, ?3)",
         params![username, email, hashed],
@@ -130,8 +130,8 @@ pub fn delete_task(id: i64) -> Result<(), String> {
 
 #[tauri::command]
 pub fn set_diary_pin(user_id: i64, pin: String) -> Result<(), String> {
-    let db = get_db();
     let hashed = bcrypt::hash(&pin, 10).map_err(|e| e.to_string())?;
+    let db = get_db();
     db.execute("UPDATE users SET diary_pin = ?1 WHERE id = ?2", params![hashed, user_id])
         .map_err(|e| e.to_string())?;
     Ok(())
@@ -355,11 +355,21 @@ pub fn create_expense(
         "INSERT INTO expenses (user_id, amount, category, description, date, type) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
         params![user_id, amount, category, description, date, expense_type],
     ).map_err(|e| e.to_string())?;
-    
+
     let id = db.last_insert_rowid();
-    Ok(Expense {
-        id, amount, category, description, date, expense_type, created_at: String::new(),
-    })
+    let mut stmt = db.prepare("SELECT id, amount, category, description, date, type, created_at FROM expenses WHERE id = ?1")
+        .map_err(|e| e.to_string())?;
+    stmt.query_row(params![id], |row| {
+        Ok(Expense {
+            id: row.get(0)?,
+            amount: row.get(1)?,
+            category: row.get(2)?,
+            description: row.get(3)?,
+            date: row.get(4)?,
+            expense_type: row.get(5)?,
+            created_at: row.get(6)?,
+        })
+    }).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -397,9 +407,16 @@ pub fn create_project(user_id: i64, title: String, description: Option<String>) 
         params![user_id, title, description],
     ).map_err(|e| e.to_string())?;
     let id = db.last_insert_rowid();
-    Ok(Project {
-        id, title, description, created_at: String::new(),
-    })
+    let mut stmt = db.prepare("SELECT id, title, description, created_at FROM projects WHERE id = ?1")
+        .map_err(|e| e.to_string())?;
+    stmt.query_row(params![id], |row| {
+        Ok(Project {
+            id: row.get(0)?,
+            title: row.get(1)?,
+            description: row.get(2)?,
+            created_at: row.get(3)?,
+        })
+    }).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -437,9 +454,18 @@ pub fn create_project_task(project_id: i64, title: String, description: Option<S
         params![project_id, title, description, status],
     ).map_err(|e| e.to_string())?;
     let id = db.last_insert_rowid();
-    Ok(ProjectTask {
-        id, project_id, title, description, status, created_at: String::new(),
-    })
+    let mut stmt = db.prepare("SELECT id, project_id, title, description, status, created_at FROM project_tasks WHERE id = ?1")
+        .map_err(|e| e.to_string())?;
+    stmt.query_row(params![id], |row| {
+        Ok(ProjectTask {
+            id: row.get(0)?,
+            project_id: row.get(1)?,
+            title: row.get(2)?,
+            description: row.get(3)?,
+            status: row.get(4)?,
+            created_at: row.get(5)?,
+        })
+    }).map_err(|e| e.to_string())
 }
 
 #[tauri::command]

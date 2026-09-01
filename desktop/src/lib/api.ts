@@ -70,12 +70,14 @@ class ApiClient {
   }
 
   async getDiaryEntries(pin: string): Promise<DiaryEntry[]> {
-    await this.verifyDiaryPin(pin);
+    const ok = await this.verifyDiaryPin(pin);
+    if (!ok) throw new Error("Invalid PIN");
     return invoke("get_diary_entries", { userId: this.getUserId() });
   }
 
   async saveDiaryEntry(date: string, pin: string, body: Partial<DiaryEntry>): Promise<DiaryEntry> {
-    await this.verifyDiaryPin(pin);
+    const ok = await this.verifyDiaryPin(pin);
+    if (!ok) throw new Error("Invalid PIN");
     return invoke("save_diary_entry", {
       userId: this.getUserId(),
       date,

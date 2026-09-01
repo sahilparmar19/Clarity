@@ -89,19 +89,19 @@ function AddExpenseModal({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 16 }}
         transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-md bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-100 dark:border-neutral-800 overflow-hidden"
+        className="w-full max-w-md bg-[#FAF9F5] dark:bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-200/70 dark:border-neutral-800 overflow-hidden"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-100 dark:border-neutral-800">
-          <h2 className="text-base font-semibold dark:text-white">Add Transaction</h2>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
+        <div className="flex items-center justify-between px-6 py-4 bg-[#EDE9DF] dark:bg-neutral-800 border-b border-neutral-200/70 dark:border-neutral-700">
+          <h2 className="text-base font-bold text-neutral-900 dark:text-white">Add Transaction</h2>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-neutral-200/60 dark:hover:bg-neutral-700 transition-colors">
             <X className="w-4 h-4 text-neutral-500" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Type toggle */}
-          <div className="flex gap-2 p-1 bg-neutral-100 dark:bg-neutral-800 rounded-xl">
+          <div className="flex gap-2 p-1 bg-neutral-200/60 dark:bg-neutral-800 rounded-xl">
             {(["EXPENSE", "INCOME"] as const).map((t) => (
               <button
                 key={t}
@@ -111,9 +111,9 @@ function AddExpenseModal({
                   "flex-1 py-2 rounded-lg text-sm font-semibold transition-all",
                   expenseType === t
                     ? t === "EXPENSE"
-                      ? "bg-red-500 text-white shadow-sm"
-                      : "bg-emerald-500 text-white shadow-sm"
-                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700"
+                      ? "bg-rose-600 text-white shadow-xs"
+                      : "bg-emerald-600 text-white shadow-xs"
+                    : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900"
                 )}
               >
                 {t === "EXPENSE" ? "Expense" : "Income"}
@@ -134,7 +134,7 @@ function AddExpenseModal({
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="0.00"
-                className="w-full pl-7 pr-4 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-400 transition text-sm"
+                className="w-full pl-7 pr-4 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-400 transition text-sm"
               />
             </div>
           </div>
@@ -154,12 +154,12 @@ function AddExpenseModal({
                     className={clsx(
                       "flex flex-col items-center gap-1 py-2 px-1 rounded-xl text-[10px] font-semibold transition-all border",
                       selected
-                        ? "border-blue-400 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 shadow-sm"
-                        : "border-transparent hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-500 dark:text-neutral-400"
+                        ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 shadow-xs"
+                        : "border-transparent hover:bg-neutral-200/50 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400"
                     )}
                   >
                     <Icon className="w-4 h-4" />
-                    {cat.label}
+                    <span>{cat.label}</span>
                   </button>
                 );
               })}
@@ -168,46 +168,45 @@ function AddExpenseModal({
 
           {/* Description */}
           <div>
-            <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1.5">Note</label>
+            <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1.5">Description (optional)</label>
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Optional description..."
-              className="w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-400 transition text-sm"
+              placeholder="What was this for?"
+              className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-400 transition text-sm"
             />
           </div>
 
           {/* Date */}
           <div>
-            <label className="flex items-center gap-1.5 text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1.5">
-              <CalendarDays className="w-3.5 h-3.5" /> Date
-            </label>
+            <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1.5">Date</label>
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-400 transition text-sm"
+              className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-400 transition text-sm"
             />
           </div>
 
           {error && <p className="text-xs text-red-500">{error}</p>}
 
-          <div className="flex gap-3 pt-1">
-            <button type="button" onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 transition">
+          {/* Actions */}
+          <div className="flex justify-end gap-2 pt-2 border-t border-neutral-200/60 dark:border-neutral-800">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 text-sm font-semibold text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition"
+            >
               Cancel
             </button>
-            <button type="submit" disabled={saving}
-              className={clsx(
-                "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-white text-sm font-semibold shadow-sm disabled:opacity-50 transition",
-                isExpense
-                  ? "bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 shadow-red-200 dark:shadow-none"
-                  : "bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-emerald-200 dark:shadow-none"
-              )}
+            <button
+              type="submit"
+              disabled={saving}
+              className="flex items-center gap-1.5 px-5 py-2 bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 rounded-xl text-sm font-semibold transition disabled:opacity-50 shadow-xs"
             >
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
-              {isExpense ? "Add Expense" : "Add Income"}
+              {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+              Save Transaction
             </button>
           </div>
         </form>
@@ -282,16 +281,16 @@ export default function ExpensesPage() {
       </AnimatePresence>
 
       {/* Header */}
-      <div className="border-b border-neutral-100 dark:border-neutral-800 px-8 py-6 flex items-center justify-between bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl">
+      <div className="border-b border-neutral-200/70 dark:border-neutral-800 px-8 py-5 flex items-center justify-between bg-[#FAF9F5] dark:bg-neutral-900 shadow-xs">
         <div>
-          <h2 className="text-2xl font-bold dark:text-white tracking-tight">Expenses</h2>
-          <p className="text-neutral-500 dark:text-neutral-400 mt-1 text-sm font-medium">Track your spending</p>
+          <h2 className="text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">Expenses</h2>
+          <p className="text-neutral-500 dark:text-neutral-400 text-xs font-medium">Track your personal spending and income</p>
         </div>
         <div className="flex items-center gap-3">
           <select
             value={filterMonth}
             onChange={(e) => setFilterMonth(e.target.value)}
-            className="px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-sm dark:text-white outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-sm font-medium text-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-400 transition"
           >
             {months.map((m) => (
               <option key={m} value={m}>{dayjs(m).format("MMMM YYYY")}</option>
@@ -299,39 +298,39 @@ export default function ExpensesPage() {
           </select>
           <button
             onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-xl shadow-sm text-sm font-semibold transition"
+            className="flex items-center gap-2 px-4 py-2 bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 rounded-xl shadow-xs text-sm font-semibold transition"
           >
-            <Plus className="w-4 h-4" /> Add
+            <Plus className="w-4 h-4" /> Add Transaction
           </button>
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto p-8">
+      <div className="flex-1 overflow-auto p-8 bg-[#EDE9DF] dark:bg-neutral-950">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Summary Cards */}
           <div className="grid grid-cols-3 gap-4">
             {[
-              { label: "Income", amount: totalIncome, icon: TrendingUp, color: "from-emerald-500 to-green-600", textColor: "text-emerald-600 dark:text-emerald-400" },
-              { label: "Expenses", amount: totalExpenses, icon: TrendingDown, color: "from-red-500 to-rose-600", textColor: "text-red-600 dark:text-red-400" },
-              { label: "Balance", amount: balance, icon: DollarSign, color: balance >= 0 ? "from-blue-500 to-indigo-600" : "from-orange-500 to-red-500", textColor: balance >= 0 ? "text-blue-600 dark:text-blue-400" : "text-orange-600 dark:text-orange-400" },
+              { label: "Income", amount: totalIncome, icon: TrendingUp, color: "bg-emerald-600", textColor: "text-emerald-700 dark:text-emerald-400" },
+              { label: "Expenses", amount: totalExpenses, icon: TrendingDown, color: "bg-rose-600", textColor: "text-rose-700 dark:text-rose-400" },
+              { label: "Net Balance", amount: balance, icon: DollarSign, color: balance >= 0 ? "bg-indigo-600" : "bg-amber-600", textColor: balance >= 0 ? "text-indigo-700 dark:text-indigo-400" : "text-amber-700 dark:text-amber-400" },
             ].map(({ label, amount, icon: Icon, color, textColor }) => (
               <motion.div
                 key={label}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white dark:bg-neutral-800/60 border border-neutral-200/50 dark:border-neutral-700/50 rounded-2xl p-5 backdrop-blur-xl"
+                className="bg-[#FAF9F5] dark:bg-neutral-900 border border-neutral-200/70 dark:border-neutral-800 rounded-2xl p-5 shadow-xs"
               >
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-medium text-neutral-500 dark:text-neutral-400">{label}</span>
-                  <div className={`w-8 h-8 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center`}>
+                  <div className={`w-8 h-8 rounded-xl ${color} flex items-center justify-center shadow-xs`}>
                     <Icon className="w-4 h-4 text-white" />
                   </div>
                 </div>
-                <div className={clsx("text-2xl font-bold", textColor)}>
+                <div className={clsx("text-2xl font-bold tracking-tight", textColor)}>
                   ₹{Math.abs(amount).toFixed(2)}
                 </div>
-                {label === "Balance" && amount < 0 && (
-                  <p className="text-xs text-orange-500 mt-1 font-medium">Over budget</p>
+                {label === "Net Balance" && amount < 0 && (
+                  <p className="text-xs text-amber-600 dark:text-amber-400 mt-1 font-medium">Over budget</p>
                 )}
               </motion.div>
             ))}
@@ -339,8 +338,8 @@ export default function ExpensesPage() {
 
           {/* Category Breakdown */}
           {topCategories.length > 0 && (
-            <div className="bg-white dark:bg-neutral-800/60 border border-neutral-200/50 dark:border-neutral-700/50 rounded-2xl p-5 backdrop-blur-xl">
-              <h3 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 mb-4">Top Categories</h3>
+            <div className="bg-[#FAF9F5] dark:bg-neutral-900 border border-neutral-200/70 dark:border-neutral-800 rounded-2xl p-5 shadow-xs">
+              <h3 className="text-sm font-bold text-neutral-800 dark:text-neutral-200 mb-4">Top Spending Categories</h3>
               <div className="space-y-3">
                 {topCategories.map(([cat, total]) => {
                   const meta = categoryMeta(cat);
@@ -353,19 +352,19 @@ export default function ExpensesPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between text-sm mb-1">
-                          <span className="font-medium text-neutral-700 dark:text-neutral-300">{cat}</span>
-                          <span className="text-neutral-500 dark:text-neutral-400">₹{total.toFixed(2)}</span>
+                          <span className="font-medium text-neutral-800 dark:text-neutral-200">{cat}</span>
+                          <span className="text-neutral-500 dark:text-neutral-400 font-semibold">₹{total.toFixed(2)}</span>
                         </div>
-                        <div className="h-1.5 bg-neutral-100 dark:bg-neutral-700 rounded-full overflow-hidden">
+                        <div className="h-1.5 bg-neutral-200/70 dark:bg-neutral-800 rounded-full overflow-hidden">
                           <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${pct}%` }}
                             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                            className="h-full bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full"
+                            className="h-full bg-indigo-600 rounded-full"
                           />
                         </div>
                       </div>
-                      <span className="text-xs text-neutral-400 w-10 text-right">{pct.toFixed(0)}%</span>
+                      <span className="text-xs font-semibold text-neutral-500 w-10 text-right">{pct.toFixed(0)}%</span>
                     </div>
                   );
                 })}
@@ -375,7 +374,7 @@ export default function ExpensesPage() {
 
           {/* Transactions List */}
           <div>
-            <h3 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 mb-3">
+            <h3 className="text-sm font-bold text-neutral-800 dark:text-neutral-200 mb-3">
               Transactions
               <span className="ml-2 text-neutral-400 font-normal">({filtered.length})</span>
             </h3>
@@ -385,11 +384,11 @@ export default function ExpensesPage() {
                 <Loader2 className="w-5 h-5 animate-spin" /> Loading…
               </div>
             ) : filtered.length === 0 ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
-                <div className="w-16 h-16 bg-neutral-100 dark:bg-neutral-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <DollarSign className="w-7 h-7 text-neutral-300 dark:text-neutral-600" />
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16 bg-[#FAF9F5] dark:bg-neutral-900 border border-neutral-200/70 dark:border-neutral-800 rounded-2xl">
+                <div className="w-14 h-14 bg-neutral-200/60 dark:bg-neutral-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <DollarSign className="w-6 h-6 text-neutral-400" />
                 </div>
-                <h3 className="text-base font-semibold dark:text-white">No transactions yet</h3>
+                <h3 className="text-base font-bold text-neutral-800 dark:text-white">No transactions yet</h3>
                 <p className="text-neutral-500 text-sm mt-1">Add your first expense or income above.</p>
               </motion.div>
             ) : (
@@ -406,7 +405,7 @@ export default function ExpensesPage() {
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
-                        className="group flex items-center gap-3 p-4 bg-white dark:bg-neutral-800/60 border border-neutral-200/50 dark:border-neutral-700/50 rounded-2xl hover:shadow-sm hover:border-neutral-300 dark:hover:border-neutral-600 transition-all backdrop-blur-xl"
+                        className="group flex items-center gap-3 p-4 bg-[#FAF9F5] dark:bg-neutral-900 border border-neutral-200/70 dark:border-neutral-800 rounded-2xl hover:shadow-xs hover:border-neutral-300 dark:hover:border-neutral-700 transition-all"
                       >
                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${meta.color}`}>
                           <Icon className="w-5 h-5" />
@@ -429,13 +428,14 @@ export default function ExpensesPage() {
                         </div>
                         <div className={clsx(
                           "text-base font-bold",
-                          isIncome ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"
+                          isIncome ? "text-emerald-700 dark:text-emerald-400" : "text-rose-700 dark:text-rose-400"
                         )}>
                           {isIncome ? "+" : "-"}₹{expense.amount.toFixed(2)}
                         </div>
                         <button
                           onClick={() => deleteExpense(expense.id)}
-                          className="opacity-0 group-hover:opacity-100 p-1.5 text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition"
+                          className="opacity-0 group-hover:opacity-100 p-1.5 text-neutral-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition"
+                          title="Delete transaction"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

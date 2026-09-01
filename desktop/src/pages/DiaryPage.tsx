@@ -199,20 +199,20 @@ export default function DiaryPage() {
   const entry = entries[selectedDate];
 
   return (
-    <div className="h-full flex overflow-hidden">
+    <div className="h-full flex overflow-hidden bg-[#EDE9DF] dark:bg-neutral-950">
       {/* ── Left Sidebar: date list ─────────────────────────── */}
-      <aside className="w-64 flex-shrink-0 border-r border-neutral-200/70 dark:border-neutral-800 flex flex-col bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl">
+      <aside className="w-64 flex-shrink-0 border-r border-neutral-200/70 dark:border-neutral-800 flex flex-col bg-[#FAF9F5] dark:bg-neutral-900 shadow-xs">
         {/* header */}
-        <div className="p-5 border-b border-neutral-100 dark:border-neutral-800 flex items-center justify-between">
+        <div className="p-5 border-b border-neutral-200/70 dark:border-neutral-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-indigo-500" />
-            <h2 className="font-bold text-neutral-900 dark:text-white text-sm">Diary</h2>
+            <BookOpen className="w-5 h-5 text-indigo-600" />
+            <h2 className="font-bold text-neutral-900 dark:text-white text-base tracking-tight">Diary</h2>
           </div>
           <div className="flex items-center gap-1">
             <button
               title="Add date"
               onClick={() => setAddingDate((v) => !v)}
-              className="p-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-indigo-500 transition-colors"
+              className="p-1.5 rounded-lg hover:bg-neutral-200/60 dark:hover:bg-neutral-800 text-indigo-600 dark:text-indigo-400 transition-colors"
             >
               <Plus className="w-4 h-4" />
             </button>
