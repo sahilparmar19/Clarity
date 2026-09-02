@@ -56,22 +56,29 @@ function LockScreen({
   };
 
   return (
-    <div className="h-full flex items-center justify-center p-6 bg-[#F4F1EA] dark:bg-[#0E0E10]">
+    <div className="h-full flex items-center justify-center p-6 bg-[#090A0F]">
       <motion.div
         initial={{ opacity: 0, scale: 0.96, y: 16 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
         className="w-full max-w-sm"
       >
-        <div className="relative overflow-hidden rounded-3xl shadow-2xl border border-neutral-200/80 dark:border-neutral-800 bg-white dark:bg-[#18181B]">
-          {/* Header Gradient */}
-          <div className="bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-600 p-8 text-white text-center relative">
-            <div className="w-14 h-14 mx-auto mb-3.5 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center ring-1 ring-white/25 shadow-inner">
-              <BookOpen className="w-7 h-7 text-white stroke-[2.2]" />
+        <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-[#12141D] shadow-[0_24px_64px_rgba(0,0,0,0.8),inset_0_1px_0_0_rgba(255,255,255,0.08)]">
+          {/* Header — obsidian with gradient accent bar */}
+          <div className="relative px-8 pt-8 pb-7 text-center overflow-hidden">
+            {/* Crimson/violet glow behind icon */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#7C3AED]/[0.08] to-transparent pointer-events-none" />
+            <div className="relative w-16 h-16 mx-auto mb-4 rounded-2xl bg-[#151824] border border-white/[0.08] flex items-center justify-center shadow-[0_0_24px_rgba(124,58,237,0.2)]">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#E11D48]/80 to-[#7C3AED]/80 flex items-center justify-center shadow-[0_0_16px_rgba(124,58,237,0.35)]">
+                <BookOpen className="w-5 h-5 text-white stroke-[2.2]" />
+              </div>
             </div>
-            <h2 className="text-xl font-bold tracking-tight">Personal Diary</h2>
-            <p className="text-indigo-100/90 text-xs mt-0.5 font-medium">Encrypted & password-protected</p>
+            <h2 className="relative text-xl font-bold tracking-tight text-[#F4F4F8]">Personal Diary</h2>
+            <p className="relative text-[#94A3B8]/50 text-xs mt-0.5 font-medium">Encrypted & password-protected</p>
           </div>
+
+          {/* Divider accent line */}
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-[#7C3AED]/25 to-transparent" />
 
           <div className="p-7">
             <form onSubmit={isSettingPin ? handleSetPin : handleUnlock} className="space-y-4">
@@ -81,7 +88,7 @@ function LockScreen({
                     initial={{ opacity: 0, y: -6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    className="flex items-center gap-2 p-3 text-rose-600 bg-rose-50 dark:bg-rose-950/30 dark:text-rose-400 rounded-xl text-xs font-semibold border border-rose-200 dark:border-rose-900/50"
+                    className="flex items-center gap-2 p-3 text-[#E11D48] bg-[#E11D48]/10 rounded-xl text-xs font-semibold border border-[#E11D48]/20"
                   >
                     <AlertCircle className="w-4 h-4 flex-shrink-0" />
                     <span>{error}</span>
@@ -90,17 +97,17 @@ function LockScreen({
               </AnimatePresence>
 
               <div>
-                <label className="block text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-semibold text-[#94A3B8]/60 uppercase tracking-wider mb-2">
                   {isSettingPin ? "Create PIN" : "Enter PIN"}
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#94A3B8]/40" />
                   <input
                     type="password"
                     value={pin}
                     onChange={(e) => setPin(e.target.value)}
                     placeholder={isSettingPin ? "Min. 4 characters" : "••••••"}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700/80 bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition text-sm font-semibold tracking-widest shadow-xs"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-white/[0.08] bg-[#0C0D14] text-[#F4F4F8] outline-none focus:ring-2 focus:ring-[#7C3AED]/25 focus:border-[#7C3AED]/40 transition text-sm font-semibold tracking-widest"
                     autoFocus
                   />
                 </div>
@@ -109,7 +116,7 @@ function LockScreen({
               <button
                 type="submit"
                 disabled={loading || !pin}
-                className="w-full flex items-center justify-center gap-2 bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 py-2.5 px-4 rounded-xl text-xs font-bold transition duration-150 disabled:opacity-50 shadow-xs cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 bg-[#7C3AED] hover:bg-[#6D28D9] text-white py-2.5 px-4 rounded-xl text-xs font-bold transition shadow-[0_0_20px_rgba(124,58,237,0.3)] disabled:opacity-50 cursor-pointer"
               >
                 {loading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -124,7 +131,7 @@ function LockScreen({
                 <button
                   type="button"
                   onClick={() => { setIsSettingPin(!isSettingPin); setError(""); setPin(""); }}
-                  className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition cursor-pointer"
+                  className="text-xs font-semibold text-[#94A3B8]/50 hover:text-[#7C3AED] transition cursor-pointer"
                 >
                   {isSettingPin ? "Already have a PIN? Unlock" : "First time? Set your PIN"}
                 </button>
@@ -199,29 +206,29 @@ export default function DiaryPage() {
   const entry = entries[selectedDate];
 
   return (
-    <div className="h-full flex overflow-hidden bg-[#F4F1EA] dark:bg-[#0E0E10]">
+    <div className="h-full flex overflow-hidden bg-[#090A0F]">
       {/* ── Left Sidebar: date list ─────────────────────────── */}
-      <aside className="w-68 flex-shrink-0 border-r border-neutral-200/80 dark:border-neutral-800/80 flex flex-col bg-[#FAF8F5]/90 dark:bg-[#141416]/90 shadow-xs">
+      <aside className="w-68 flex-shrink-0 border-r border-white/[0.06] flex flex-col bg-[#0C0D14]/80">
         {/* header */}
-        <div className="px-5 py-4 border-b border-neutral-200/70 dark:border-neutral-800 flex items-center justify-between">
+        <div className="px-5 py-4 border-b border-white/[0.06] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-indigo-500/10 dark:bg-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+            <div className="w-7 h-7 rounded-lg bg-[#7C3AED]/10 flex items-center justify-center text-[#7C3AED]">
               <BookOpen className="w-4 h-4 stroke-[2.2]" />
             </div>
-            <h2 className="font-bold text-neutral-900 dark:text-white text-sm tracking-tight">Diary Entries</h2>
+            <h2 className="font-bold text-[#F4F4F8] text-sm tracking-tight">Diary Entries</h2>
           </div>
           <div className="flex items-center gap-1">
             <button
               title="Add date"
               onClick={() => setAddingDate((v) => !v)}
-              className="p-1.5 rounded-lg hover:bg-neutral-200/60 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg hover:bg-white/[0.06] text-[#94A3B8]/60 hover:text-[#F4F4F8] transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4 stroke-[2.2]" />
             </button>
             <button
               title="Lock diary"
               onClick={() => { setIsLocked(true); setPin(""); setEntries({}); }}
-              className="p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/20 text-neutral-400 hover:text-rose-600 transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg hover:bg-[#E11D48]/10 text-[#94A3B8]/40 hover:text-[#E11D48] transition-colors cursor-pointer"
             >
               <Lock className="w-4 h-4 stroke-[1.8]" />
             </button>
@@ -238,17 +245,17 @@ export default function DiaryPage() {
               transition={{ duration: 0.15 }}
               className="overflow-hidden"
             >
-              <div className="p-3 border-b border-neutral-200/70 dark:border-neutral-800 bg-neutral-100/70 dark:bg-neutral-800/40 flex items-center gap-2">
-                <CalendarDays className="w-4 h-4 text-indigo-500 flex-shrink-0" />
+              <div className="p-3 border-b border-white/[0.06] bg-[#151824]/60 flex items-center gap-2">
+                <CalendarDays className="w-4 h-4 text-[#7C3AED] flex-shrink-0" />
                 <input
                   type="date"
                   value={newDate}
                   onChange={(e) => setNewDate(e.target.value)}
-                  className="flex-1 text-xs bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg px-2 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500/20 dark:text-white shadow-2xs"
+                  className="flex-1 text-xs bg-[#0C0D14] border border-white/[0.08] rounded-lg px-2 py-1.5 outline-none focus:ring-2 focus:ring-[#7C3AED]/25 focus:border-[#7C3AED]/40 text-[#F4F4F8]"
                 />
                 <button
                   onClick={handleAddDate}
-                  className="p-1.5 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-950 hover:bg-neutral-800 transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg bg-[#7C3AED] hover:bg-[#6D28D9] text-white transition-colors cursor-pointer shadow-[0_0_10px_rgba(124,58,237,0.3)]"
                 >
                   <Check className="w-3.5 h-3.5 stroke-[2.5]" />
                 </button>
@@ -272,18 +279,18 @@ export default function DiaryPage() {
                 className={clsx(
                   "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 text-left group cursor-pointer",
                   isSelected
-                    ? "bg-white dark:bg-[#18181B] border border-neutral-200/90 dark:border-neutral-700/80 shadow-xs"
-                    : "hover:bg-neutral-200/40 dark:hover:bg-neutral-800/40"
+                    ? "bg-[#151824] border border-white/[0.1] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.07)]"
+                    : "hover:bg-white/[0.03] border border-transparent"
                 )}
               >
                 {/* date badge */}
                 <div className={clsx(
                   "w-9 h-9 rounded-xl flex flex-col items-center justify-center flex-shrink-0 text-xs font-bold leading-tight",
                   isToday
-                    ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 shadow-xs"
+                    ? "bg-gradient-to-tr from-[#E11D48]/80 to-[#7C3AED]/80 text-white shadow-[0_0_12px_rgba(124,58,237,0.35)]"
                     : isSelected
-                      ? "bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800/60"
-                      : "bg-neutral-200/60 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400"
+                      ? "bg-[#7C3AED]/10 text-[#7C3AED] border border-[#7C3AED]/25"
+                      : "bg-[#151824] text-[#94A3B8]/60 border border-white/[0.06]"
                 )}>
                   <span className="text-[9px] uppercase tracking-wider opacity-80">{d.format("MMM")}</span>
                   <span className="text-xs font-bold -mt-0.5">{d.format("D")}</span>
@@ -292,16 +299,16 @@ export default function DiaryPage() {
                 <div className="flex-1 min-w-0">
                   <div className={clsx(
                     "text-xs font-bold truncate",
-                    isSelected ? "text-neutral-900 dark:text-white" : "text-neutral-700 dark:text-neutral-300"
+                    isSelected ? "text-[#F4F4F8]" : "text-[#94A3B8]/70"
                   )}>
                     {isToday ? "Today" : d.format("dddd")}
                   </div>
-                  <div className="text-[11px] text-neutral-400 dark:text-neutral-500 truncate mt-0.5">
+                  <div className="text-[11px] text-[#94A3B8]/40 truncate mt-0.5">
                     {hasEntry ? entries[date].body!.slice(0, 30) + (entries[date].body!.length > 30 ? "…" : "") : "No entry yet"}
                   </div>
                 </div>
 
-                {isSelected && <ChevronRight className="w-3.5 h-3.5 text-neutral-400 flex-shrink-0" />}
+                {isSelected && <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8]/40 flex-shrink-0" />}
               </button>
             );
           })}
@@ -320,12 +327,12 @@ export default function DiaryPage() {
             className="flex-1 flex flex-col overflow-hidden"
           >
             {/* date header */}
-            <div className="px-10 pt-8 pb-5 border-b border-neutral-200/70 dark:border-neutral-800 flex items-start justify-between bg-[#FAF8F5]/60 dark:bg-[#141416]/60 backdrop-blur-md">
+            <div className="px-10 pt-8 pb-5 border-b border-white/[0.06] flex items-start justify-between bg-[#0C0D14]/60 backdrop-blur-md">
               <div>
-                <p className="text-xs font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
+                <p className="text-xs font-bold text-[#94A3B8]/40 uppercase tracking-wider">
                   {dayjs(selectedDate).format("dddd")}
                 </p>
-                <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mt-1 tracking-tight">
+                <h2 className="text-2xl font-bold text-[#F4F4F8] mt-1 tracking-tight">
                   {dayjs(selectedDate).format("MMMM D, YYYY")}
                 </h2>
               </div>
@@ -335,17 +342,17 @@ export default function DiaryPage() {
                 <AnimatePresence mode="wait">
                   {savingIds[selectedDate] ? (
                     <motion.span key="saving" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                      className="flex items-center gap-1.5 text-xs text-neutral-500 font-medium">
-                      <Loader2 className="w-3.5 h-3.5 animate-spin text-indigo-500" /> Saving…
+                      className="flex items-center gap-1.5 text-xs text-[#94A3B8]/50 font-medium">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-[#7C3AED]" /> Saving…
                     </motion.span>
                   ) : savedIds[selectedDate] ? (
                     <motion.span key="saved" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
-                      className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-950/30 px-2.5 py-1 rounded-lg border border-emerald-200 dark:border-emerald-900/50">
+                      className="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold bg-emerald-950/30 px-2.5 py-1 rounded-lg border border-emerald-900/50">
                       <Check className="w-3.5 h-3.5 stroke-[2.5]" /> Saved
                     </motion.span>
                   ) : (
                     <motion.span key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                      className="flex items-center gap-1.5 text-xs text-neutral-400">
+                      className="flex items-center gap-1.5 text-xs text-[#94A3B8]/30">
                       <Pencil className="w-3.5 h-3.5 stroke-[1.8]" /> Auto-saves on blur
                     </motion.span>
                   )}
@@ -360,7 +367,7 @@ export default function DiaryPage() {
                 key={selectedDate}
                 defaultValue={entry?.body || ""}
                 placeholder="What's on your mind today? Write freely..."
-                className="w-full h-full bg-transparent resize-none outline-none leading-[36px] text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-600 text-lg font-serif"
+                className="w-full h-full bg-transparent resize-none outline-none leading-[36px] text-[#F4F4F8] placeholder-[#94A3B8]/30 text-lg font-serif"
                 onBlur={(e) => {
                   const val = e.target.value.trim();
                   if (val !== (entry?.body || "").trim()) {
