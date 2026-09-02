@@ -71,7 +71,7 @@ function NewTaskModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-md p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-xs p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <motion.div
@@ -79,26 +79,26 @@ function NewTaskModal({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 12 }}
         transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-md bg-white dark:bg-[#18181B] rounded-2xl shadow-2xl border border-neutral-200/80 dark:border-neutral-800 overflow-hidden"
+        className="w-full max-w-md morning-card-elevated overflow-hidden"
       >
-        <div className="flex items-center justify-between px-6 py-4.5 bg-neutral-50/70 dark:bg-neutral-900/50 border-b border-neutral-200/60 dark:border-neutral-800">
+        <div className="flex items-center justify-between px-6 py-4.5 bg-[#FAF8F5] border-b border-black/[0.06]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-indigo-500/10 dark:bg-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+            <div className="w-8 h-8 rounded-xl bg-[#D98A7E]/15 flex items-center justify-center text-[#C87467] shadow-sm">
               <CheckSquare className="w-4 h-4 stroke-[2.2]" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-neutral-900 dark:text-white">Create New Task</h2>
-              <p className="text-xs text-neutral-500">Add an action item with optional deadline</p>
+              <h2 className="text-lg font-bold text-[#24211E] font-serif">Create New Task</h2>
+              <p className="text-xs text-[#827A72]">Add an action item with optional deadline</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors">
+          <button onClick={onClose} className="p-1.5 rounded-lg text-[#827A72] hover:text-[#24211E] hover:bg-black/[0.04] transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-bold text-[#524B45] uppercase tracking-wider mb-1.5">
               Task Title *
             </label>
             <input
@@ -107,12 +107,12 @@ function NewTaskModal({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="What needs to be done?"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700/80 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm shadow-xs transition"
+              className="morning-input"
             />
           </div>
 
           <div>
-            <label className="flex items-center gap-1.5 text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider mb-1.5">
+            <label className="flex items-center gap-1.5 text-xs font-bold text-[#524B45] uppercase tracking-wider mb-1.5">
               <AlignLeft className="w-3.5 h-3.5" /> Description
             </label>
             <textarea
@@ -120,24 +120,24 @@ function NewTaskModal({
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Add details, notes, or links..."
               rows={3}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700/80 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm shadow-xs transition resize-none"
+              className="morning-input resize-none"
             />
           </div>
 
           <div>
-            <label className="flex items-center gap-1.5 text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider mb-1.5">
+            <label className="flex items-center gap-1.5 text-xs font-bold text-[#524B45] uppercase tracking-wider mb-1.5">
               <CalendarDays className="w-3.5 h-3.5" /> Due Date & Time
             </label>
             <input
               type="datetime-local"
               value={dueAt}
               onChange={(e) => setDueAt(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700/80 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm shadow-xs transition"
+              className="morning-input"
             />
           </div>
 
           {error && (
-            <p className="text-xs text-rose-500 font-medium bg-rose-50 dark:bg-rose-950/30 p-2.5 rounded-lg border border-rose-200 dark:border-rose-900/50">
+            <p className="text-xs text-[#C87467] font-semibold bg-[#C87467]/10 p-2.5 rounded-lg border border-[#C87467]/20">
               {error}
             </p>
           )}
@@ -146,14 +146,14 @@ function NewTaskModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer"
+              className="flex-1 py-2.5 rounded-xl border border-black/[0.08] text-sm font-semibold text-[#6E6862] hover:bg-black/[0.04] hover:text-[#24211E] transition cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 hover:bg-neutral-800 dark:hover:bg-neutral-100 text-sm font-semibold shadow-xs disabled:opacity-50 transition cursor-pointer"
+              className="flex-1 morning-btn-accent"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4 stroke-[2.2]" />}
               Create Task
@@ -210,7 +210,7 @@ export default function TasksPage() {
   };
 
   return (
-    <div className="h-full flex flex-col bg-[#F4F1EA] dark:bg-[#0E0E10]">
+    <div className="h-full flex flex-col bg-transparent">
       <AnimatePresence>
         {showModal && (
           <NewTaskModal onClose={() => setShowModal(false)} onCreated={(t) => setTasks((p) => [t, ...p])} />
@@ -218,14 +218,14 @@ export default function TasksPage() {
       </AnimatePresence>
 
       {/* Header */}
-      <div className="shrink-0 bg-[#FAF8F5]/90 dark:bg-[#141416]/90 backdrop-blur-md border-b border-neutral-200/80 dark:border-neutral-800/80 px-8 py-5 flex items-center justify-between shadow-xs">
+      <div className="shrink-0 bg-[#F5F2EC]/85 backdrop-blur-md border-b border-[#DDD7CE] px-8 py-5 flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-neutral-900 dark:text-white tracking-tight">Tasks & To-Do</h2>
-          <p className="text-neutral-500 dark:text-neutral-400 text-xs font-medium">Capture, schedule, and track action items</p>
+          <h2 className="text-3xl font-bold text-[#24211E] tracking-tight font-serif">Tasks & To-Do</h2>
+          <p className="text-[#827A72] text-xs font-semibold mt-0.5">Capture, schedule, and track action items</p>
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-1.5 px-4 py-2 bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 rounded-xl shadow-xs text-xs font-semibold transition cursor-pointer"
+          className="morning-btn-accent"
         >
           <Plus className="w-4 h-4 stroke-[2.2]" /> New Task
         </button>
@@ -234,7 +234,7 @@ export default function TasksPage() {
       <div className="flex-1 overflow-auto p-8 relative">
         <div className="max-w-3xl mx-auto space-y-6">
           {/* Segmented Filter Switcher */}
-          <div className="flex items-center gap-1 bg-neutral-200/50 dark:bg-neutral-800/60 p-1 rounded-xl border border-neutral-200/60 dark:border-neutral-700/60 w-max shadow-2xs">
+          <div className="flex items-center gap-1 bg-[#EAE5DE] p-1 rounded-xl border border-black/[0.06] w-max shadow-xs">
             {(["Pending", "All"] as const).map((lbl) => {
               const active = lbl === "Pending" ? pendingOnly : !pendingOnly;
               return (
@@ -244,17 +244,10 @@ export default function TasksPage() {
                   className={clsx(
                     "relative z-10 px-4 py-1.5 text-xs font-bold rounded-lg transition-colors duration-150 select-none cursor-pointer",
                     active
-                      ? "text-neutral-900 dark:text-white"
-                      : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
+                      ? "bg-[#FAF8F5] text-[#24211E] shadow-sm border border-black/[0.04]"
+                      : "text-[#6E6862] hover:text-[#24211E]"
                   )}
                 >
-                  {active && (
-                    <motion.div
-                      layoutId="task-tab-bg"
-                      className="absolute inset-0 bg-white dark:bg-neutral-700 rounded-lg shadow-xs -z-10"
-                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                    />
-                  )}
                   {lbl}
                 </button>
               );
@@ -262,85 +255,87 @@ export default function TasksPage() {
           </div>
 
           {loading ? (
-            <div className="flex items-center justify-center py-20 text-neutral-400 gap-2">
-              <Loader2 className="w-5 h-5 animate-spin text-indigo-500" />
+            <div className="flex items-center justify-center py-20 text-[#827A72] gap-2">
+              <Loader2 className="w-5 h-5 animate-spin text-[#C87467]" />
               <span className="text-xs font-medium">Loading tasks...</span>
             </div>
           ) : tasks.length === 0 ? (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center py-20 bg-white dark:bg-[#18181B] border border-neutral-200/80 dark:border-neutral-800 rounded-2xl p-8 shadow-xs"
+              className="text-center py-20 morning-card p-8"
             >
-              <div className="w-12 h-12 bg-neutral-100 dark:bg-neutral-800 rounded-2xl flex items-center justify-center mx-auto mb-3 text-neutral-400">
+              <div className="w-12 h-12 bg-[#F2EFE9] rounded-2xl flex items-center justify-center mx-auto mb-3 text-[#6B8065] border border-black/[0.06]">
                 <CheckSquare className="w-6 h-6 stroke-[1.8]" />
               </div>
-              <h3 className="text-sm font-bold text-neutral-900 dark:text-white">All caught up!</h3>
-              <p className="text-neutral-400 text-xs mt-1">
+              <h3 className="text-base font-bold text-[#24211E] font-serif">All caught up!</h3>
+              <p className="text-[#827A72] text-xs mt-1">
                 {pendingOnly ? "No pending tasks remaining. Great job!" : "No tasks found in your workspace."}
               </p>
             </motion.div>
           ) : (
-            <div className="space-y-3">
-              <AnimatePresence initial={false}>
-                {tasks.map((task) => {
-                  const isOverdue = task.dueAt && new Date(task.dueAt).getTime() < Date.now() && !task.completed;
-                  return (
-                    <motion.div
-                      key={task.id}
-                      layout
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.12 } }}
-                      className="group flex items-start gap-3.5 px-4.5 py-4 border border-neutral-200/80 dark:border-neutral-800 rounded-2xl bg-white dark:bg-[#18181B] hover:shadow-xs hover:border-neutral-300 dark:hover:border-neutral-700 transition-all"
-                    >
-                      <button
-                        onClick={() => toggleComplete(task)}
-                        className="mt-0.5 flex-shrink-0 text-neutral-300 hover:text-indigo-600 dark:text-neutral-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
+            <div className="morning-chassis morning-chassis-sage overflow-hidden">
+              <div className="morning-core p-4 space-y-2.5">
+                <AnimatePresence initial={false}>
+                  {tasks.map((task) => {
+                    const isOverdue = task.dueAt && new Date(task.dueAt).getTime() < Date.now() && !task.completed;
+                    return (
+                      <motion.div
+                        key={task.id}
+                        layout
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.12 } }}
+                        className="group flex items-start gap-3.5 px-4.5 py-4 bg-[#FAF8F5] border border-black/[0.06] rounded-xl hover:shadow-xs transition-all"
                       >
-                        {task.completed ? (
-                          <CheckCircle2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400 stroke-[2.2]" />
-                        ) : (
-                          <Circle className="w-5 h-5 stroke-[1.8]" />
-                        )}
-                      </button>
+                        <button
+                          onClick={() => toggleComplete(task)}
+                          className="mt-0.5 flex-shrink-0 transition-colors cursor-pointer"
+                        >
+                          {task.completed ? (
+                            <CheckCircle2 className="w-5 h-5 text-[#6B8065] stroke-[2.2]" />
+                          ) : (
+                            <Circle className="w-5 h-5 text-[#A39B92] hover:text-[#6B8065] stroke-[1.8] transition-colors" />
+                          )}
+                        </button>
 
-                      <div className="flex-1 min-w-0">
-                        <div className={clsx(
-                          "text-sm font-semibold transition-colors leading-snug",
-                          task.completed ? "text-neutral-400 line-through dark:text-neutral-500" : "text-neutral-900 dark:text-neutral-100"
-                        )}>
-                          {task.title}
-                        </div>
-                        {task.description && (
-                          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 leading-relaxed">
-                            {task.description}
-                          </p>
-                        )}
-                        {task.dueAt && (
+                        <div className="flex-1 min-w-0">
                           <div className={clsx(
-                            "mt-2.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold border",
-                            isOverdue
-                              ? "bg-rose-50/80 text-rose-600 border-rose-200 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-900/50"
-                              : "bg-neutral-100 text-neutral-600 border-neutral-200/70 dark:bg-neutral-800 dark:text-neutral-300 dark:border-neutral-700"
+                            "text-sm font-bold transition-colors leading-snug",
+                            task.completed ? "text-[#A39B92] line-through" : "text-[#24211E]"
                           )}>
-                            <Clock className="w-3 h-3 stroke-[2]" />
-                            {dayjs(task.dueAt).format("MMM D, YYYY [at] h:mm A")}
+                            {task.title}
                           </div>
-                        )}
-                      </div>
+                          {task.description && (
+                            <p className="text-xs text-[#6E6862] mt-1 leading-relaxed">
+                              {task.description}
+                            </p>
+                          )}
+                          {task.dueAt && (
+                            <div className={clsx(
+                              "mt-2.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold border",
+                              isOverdue
+                                ? "bg-[#FDF2F4] text-[#BE1239] border-[#FECDD3]"
+                                : "bg-[#F2EFE9] text-[#524B45] border-black/[0.06]"
+                            )}>
+                              <Clock className="w-3 h-3 stroke-[2]" />
+                              {dayjs(task.dueAt).format("MMM D, YYYY [at] h:mm A")}
+                            </div>
+                          )}
+                        </div>
 
-                      <button
-                        onClick={() => deleteTask(task.id)}
-                        className="opacity-0 group-hover:opacity-100 p-1.5 text-neutral-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-lg transition cursor-pointer"
-                        title="Delete task"
-                      >
-                        <Trash2 className="w-4 h-4 stroke-[1.8]" />
-                      </button>
-                    </motion.div>
-                  );
-                })}
-              </AnimatePresence>
+                        <button
+                          onClick={() => deleteTask(task.id)}
+                          className="opacity-0 group-hover:opacity-100 p-1.5 text-[#827A72] hover:text-[#C87467] hover:bg-[#C87467]/10 rounded-lg transition cursor-pointer"
+                          title="Delete task"
+                        >
+                          <Trash2 className="w-4 h-4 stroke-[1.8]" />
+                        </button>
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+              </div>
             </div>
           )}
         </div>

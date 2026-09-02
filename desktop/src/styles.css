@@ -4,59 +4,219 @@
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-serif: 'Newsreader', Georgia, Cambria, "Times New Roman", Times, serif;
 
-  --color-primary-50: #eef2ff;
-  --color-primary-100: #e0e7ff;
-  --color-primary-200: #c7d2fe;
-  --color-primary-300: #a5b4fc;
-  --color-primary-400: #818cf8;
-  --color-primary-500: #6366f1;
-  --color-primary-600: #4f46e5;
-  --color-primary-700: #4338ca;
+  /* ── "Morning" Theme Palette ── */
+  --color-morning-parchment: #F6F4EF;
+  --color-morning-clay-100: #FAF8F5;
+  --color-morning-clay-200: #F2EFE9;
+  --color-morning-clay-300: #EAE5DE;
+  --color-morning-clay-400: #DDD7CE;
+  --color-morning-clay-500: #CDC5B9;
+
+  /* ── Typography Shades ── */
+  --color-morning-espresso: #24211E;
+  --color-morning-graphite: #3A3530;
+  --color-morning-charcoal: #524B45;
+  --color-morning-stone: #827A72;
+  --color-morning-muted: #A39B92;
+
+  /* ── Satin Terracotta Ribbon Accents ── */
+  --color-morning-terracotta: #C87467;
+  --color-morning-rose: #D98A7E;
+  --color-morning-blush: #E8B4AC;
+  --color-morning-apricot: #EEDCCE;
+  --color-morning-sand: #DFD3C6;
+  --color-morning-sage: #6B8065;
 }
 
 @layer base {
   body {
-    @apply bg-[#F4F1EA] dark:bg-[#0E0E10] text-neutral-900 dark:text-neutral-100 antialiased;
+    background-color: #F5F2EC;
+    color: #3A3530;
     font-family: var(--font-sans);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   *,
   *::before,
   *::after {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     box-sizing: border-box;
   }
 
   h1, h2, h3, h4, h5, h6 {
+    color: #24211E;
     letter-spacing: -0.02em;
   }
 }
 
-/* ── Refined Subtle Scrollbars ────────────────────── */
+/* ── "Morning" Graph Paper Canvas ──────────────────── */
+/* Exactly replicates the engineering/stationery graph paper background in the reference card */
+.morning-bg {
+  background-color: #F5F2EC;
+  background-image:
+    /* Graph paper grid */
+    linear-gradient(to right, rgba(60, 50, 40, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(60, 50, 40, 0.055) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0;
+  background-attachment: fixed;
+}
+
+/* ── The Signature "Morning" Claymorphic Chassis ───── */
+/* Exactly replicates the double-beveled clay rim with smooth vertical ombre from the reference card */
+.morning-chassis {
+  position: relative;
+  background: linear-gradient(180deg, #CFD5DB 0%, #DCD9D4 40%, #E6D6D0 80%, #DFC7C0 100%);
+  border-radius: 28px;
+  padding: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 20px 48px -12px rgba(80, 70, 65, 0.16),
+    0 4px 16px rgba(0, 0, 0, 0.04),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.95);
+}
+
+/* Shade 1: Morning Blush / Rose (exact reference photo match) */
+.morning-chassis-rose,
+.morning-chassis-blush {
+  background: linear-gradient(180deg, #CED4DA 0%, #DBD8D3 38%, #E7D5CF 75%, #DFC6BF 100%);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+}
+
+/* Shade 2: Eucalyptus Sage (clean productive green clay) */
+.morning-chassis-sage {
+  background: linear-gradient(180deg, #CFD5DA 0%, #D6DAD4 38%, #D5DFD3 75%, #C5D3BF 100%);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+}
+
+/* Shade 3: Warm Honey / Amber (warm golden stationery clay) */
+.morning-chassis-honey,
+.morning-chassis-amber {
+  background: linear-gradient(180deg, #D0D4DA 0%, #DCD8D2 38%, #E6DAD0 75%, #DFCBBA 100%);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+}
+
+/* Shade 4: Dusk Lavender (reflective twilight clay) */
+.morning-chassis-dusk,
+.morning-chassis-lavender {
+  background: linear-gradient(180deg, #CFD3DB 0%, #D7D5DB 38%, #DFD5DF 75%, #D2C3D4 100%);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+}
+
+/* Shade 5: Sky Mist (crisp airy blue clay) */
+.morning-chassis-sky,
+.morning-chassis-blue {
+  background: linear-gradient(180deg, #CBD4DB 0%, #D1D9DD 38%, #D3DFE5 75%, #BDD0DB 100%);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+}
+
+.morning-core {
+  background: #FAF8F5;
+  border-radius: 21px;
+  border: 1px solid rgba(60, 50, 40, 0.06);
+  box-shadow:
+    inset 0 2px 5px rgba(60, 50, 40, 0.04),
+    0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+/* ── Morning Gradient Stationery Cards ───────────────── */
+.morning-gradient-rose {
+  background: linear-gradient(180deg, #FAF8F5 0%, #FAF8F5 60%, #F8EDE8 100%);
+  border: 1px solid rgba(200, 116, 103, 0.22);
+}
+
+.morning-gradient-sage {
+  background: linear-gradient(180deg, #FAF8F5 0%, #FAF8F5 60%, #EFF6ED 100%);
+  border: 1px solid rgba(107, 128, 101, 0.22);
+}
+
+.morning-gradient-honey {
+  background: linear-gradient(180deg, #FAF8F5 0%, #FAF8F5 60%, #F8F3E8 100%);
+  border: 1px solid rgba(196, 140, 70, 0.22);
+}
+
+.morning-gradient-dusk {
+  background: linear-gradient(180deg, #FAF8F5 0%, #FAF8F5 60%, #F5EEF7 100%);
+  border: 1px solid rgba(150, 125, 160, 0.22);
+}
+
+.morning-gradient-sky {
+  background: linear-gradient(180deg, #FAF8F5 0%, #FAF8F5 60%, #EDF5F8 100%);
+  border: 1px solid rgba(90, 145, 175, 0.22);
+}
+
+/* ── Morning Stationery Card ────────────────────────── */
+.morning-card {
+  background: #FAF8F5;
+  border: 1px solid rgba(60, 50, 40, 0.07);
+  box-shadow:
+    0 4px 16px -4px rgba(70, 60, 50, 0.07),
+    0 1px 3px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+}
+
+.morning-card-elevated {
+  background: #FFFFFF;
+  border: 1px solid rgba(60, 50, 40, 0.08);
+  box-shadow:
+    0 12px 32px -8px rgba(70, 60, 50, 0.12),
+    0 2px 6px rgba(0, 0, 0, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  border-radius: 24px;
+}
+
+/* ── "Today" Cell Warm Terracotta Halo ──────────────── */
+.morning-today {
+  background: linear-gradient(135deg, #FBF4F0 0%, #F5EAE4 100%) !important;
+  border-color: #D98A7E !important;
+  box-shadow:
+    0 4px 20px -4px rgba(200, 116, 103, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+/* ── Ribbon Dot Indicators ──────────────────────────── */
+.dot-terracotta {
+  width: 7px; height: 7px; border-radius: 9999px;
+  background: #C87467;
+  box-shadow: 0 0 6px rgba(200, 116, 103, 0.6);
+}
+.dot-sage {
+  width: 7px; height: 7px; border-radius: 9999px;
+  background: #6B8065;
+  box-shadow: 0 0 6px rgba(107, 128, 101, 0.6);
+}
+
+/* ── Stationery Notebook Lines ──────────────────────── */
+.notebook-ruled {
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 31px,
+    rgba(60, 50, 40, 0.06) 31px,
+    rgba(60, 50, 40, 0.06) 32px
+  );
+  background-size: 100% 32px;
+  background-position: 0 40px;
+}
+
+/* ── Scrollbars ─────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.12);
+  background-color: rgba(60, 50, 40, 0.15);
   border-radius: 9999px;
 }
-:is(.dark) ::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.15);
-}
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.22);
-}
-:is(.dark) ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(60, 50, 40, 0.28);
 }
 
-/* ── Page transitions ─────────────────────────────── */
+/* ── Page transition ────────────────────────────────── */
 .page-transition {
   animation: page-fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -66,38 +226,103 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Diary notebook lines ─────────────────────────── */
-.notebook-lines {
-  background-image: repeating-linear-gradient(
-    transparent,
-    transparent 35px,
-    rgba(0, 0, 0, 0.06) 35px,
-    rgba(0, 0, 0, 0.06) 36px
-  );
-  background-size: 100% 36px;
-  background-position: 0 44px;
-}
-
-:is(.dark) .notebook-lines {
-  background-image: repeating-linear-gradient(
-    transparent,
-    transparent 35px,
-    rgba(255, 255, 255, 0.06) 35px,
-    rgba(255, 255, 255, 0.06) 36px
-  );
-}
-
-/* ── Date input polish ────────────────────────────── */
+/* ── Date input polish ──────────────────────────────── */
 input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator,
 input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-  opacity: 0.5;
+  opacity: 0.55;
   cursor: pointer;
-  filter: invert(0.2);
+  filter: sepia(0.3);
 }
 
-:is(.dark) input[type="date"]::-webkit-calendar-picker-indicator,
-:is(.dark) input[type="time"]::-webkit-calendar-picker-indicator,
-:is(.dark) input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.8);
+/* ── Morning Input Fields ───────────────────────────── */
+.morning-input {
+  width: 100%;
+  padding: 0.65rem 0.95rem;
+  border-radius: 0.875rem;
+  border: 1px solid rgba(60, 50, 40, 0.12);
+  background: #FAF8F5;
+  color: #24211E;
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.16s ease;
+  box-shadow: inset 0 1px 3px rgba(60, 50, 40, 0.05);
+}
+.morning-input::placeholder {
+  color: #A39B92;
+}
+.morning-input:focus {
+  border-color: #C87467;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(200, 116, 103, 0.15), inset 0 1px 2px rgba(60, 50, 40, 0.03);
+}
+
+/* ── Primary Graphite Button ────────────────────────── */
+.morning-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.15rem;
+  border-radius: 0.875rem;
+  background: #24211E;
+  color: #FAF8F5;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow:
+    0 4px 12px rgba(36, 33, 30, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+.morning-btn-primary:hover {
+  background: #3A3530;
+  transform: translateY(-1px);
+  box-shadow:
+    0 6px 16px rgba(36, 33, 30, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.morning-btn-primary:active {
+  transform: translateY(0);
+}
+.morning-btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Terracotta Ribbon Accent Button ────────────────── */
+.morning-btn-accent {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.15rem;
+  border-radius: 0.875rem;
+  background: linear-gradient(135deg, #D98A7E 0%, #C87467 100%);
+  color: #FFFFFF;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow:
+    0 4px 14px rgba(200, 116, 103, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.morning-btn-accent:hover {
+  background: linear-gradient(135deg, #E09589 0%, #B86356 100%);
+  transform: translateY(-1px);
+  box-shadow:
+    0 6px 18px rgba(200, 116, 103, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+.morning-btn-accent:active {
+  transform: translateY(0);
+}
+.morning-btn-accent:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
 }

@@ -24,35 +24,32 @@ export default function Layout() {
   const userInitial = (username || "U").charAt(0).toUpperCase();
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#F4F1EA] dark:bg-[#0E0E10]">
-      {/* ── Sidebar ──────────────────────────────────────────── */}
-      <aside className="w-60 flex-shrink-0 bg-[#FAF8F5]/90 dark:bg-[#141416]/90 backdrop-blur-md border-r border-neutral-200/80 dark:border-neutral-800/80 flex flex-col z-20 shadow-xs">
-        {/* Logo & Brand Header */}
+    <div className="flex h-screen overflow-hidden morning-bg text-[#3A3530] select-none">
+      {/* ── Matte Clay Sidebar ───────────────────────────────── */}
+      <aside className="w-60 flex-shrink-0 bg-[#ECE8E1]/90 backdrop-blur-xl border-r border-[#DCD6CC] flex flex-col z-20 relative">
+        {/* Brand Header */}
         <div className="px-5 pt-6 pb-4">
           <div className="flex items-center gap-2.5 mb-5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center flex-shrink-0 shadow-sm shadow-indigo-500/20 ring-1 ring-black/5 dark:ring-white/10">
+            <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-[#D98A7E] to-[#C87467] flex items-center justify-center flex-shrink-0 shadow-[0_4px_12px_rgba(200,116,103,0.3),inset_0_1px_0_rgba(255,255,255,0.4)]">
               <Sparkles className="w-4.5 h-4.5 text-white stroke-[2.2]" />
             </div>
             <div>
-              <span className="text-base font-bold tracking-tight text-neutral-900 dark:text-white block leading-none">
+              <span className="text-xl font-bold tracking-tight text-[#24211E] block leading-none font-serif">
                 Clarity
-              </span>
-              <span className="text-[10px] uppercase font-semibold tracking-wider text-neutral-400 dark:text-neutral-500">
-                Personal OS
               </span>
             </div>
           </div>
 
-          {/* User Profile Chip */}
-          <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-neutral-200/40 dark:bg-neutral-800/50 border border-neutral-200/60 dark:border-neutral-800">
-            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center text-xs font-bold shadow-xs flex-shrink-0">
+          {/* User Profile Stationery Chip */}
+          <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-2xl bg-[#FAF8F5] border border-black/[0.06] shadow-[0_2px_8px_rgba(60,50,40,0.04),inset_0_1px_0_rgba(255,255,255,0.8)]">
+            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#D98A7E] to-[#C87467] text-white flex items-center justify-center text-xs font-black flex-shrink-0 shadow-sm">
               {userInitial}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 leading-tight">
+              <p className="text-[11px] font-medium text-[#827A72] leading-tight">
                 {greeting()}
               </p>
-              <p className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 truncate">
+              <p className="text-[13px] font-bold text-[#24211E] truncate font-sans">
                 {username || "Sahil"}
               </p>
             </div>
@@ -67,10 +64,10 @@ export default function Layout() {
               to={link.to}
               className={({ isActive }) =>
                 clsx(
-                  "flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-150 group text-[13.5px] font-medium select-none",
+                  "flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-150 group text-[13.5px] font-semibold cursor-pointer",
                   isActive
-                    ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 font-semibold shadow-xs"
-                    : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200/50 dark:hover:bg-neutral-800/60 hover:text-neutral-900 dark:hover:text-neutral-200"
+                    ? "bg-[#FAF8F5] text-[#24211E] shadow-[0_2px_8px_rgba(60,50,40,0.06)] border border-black/[0.05]"
+                    : "text-[#6E6862] hover:bg-black/[0.04] hover:text-[#24211E] border border-transparent"
                 )
               }
             >
@@ -80,8 +77,8 @@ export default function Layout() {
                     className={clsx(
                       "w-4.5 h-4.5 flex-shrink-0 transition-colors",
                       isActive
-                        ? "text-white dark:text-neutral-950 stroke-[2.2]"
-                        : "text-neutral-400 dark:text-neutral-500 group-hover:text-neutral-700 dark:group-hover:text-neutral-300 stroke-[1.8]"
+                        ? "text-[#C87467] stroke-[2.4]"
+                        : "text-[#8C857E] group-hover:text-[#24211E] stroke-[1.8]"
                     )}
                   />
                   <span>{link.label}</span>
@@ -92,19 +89,19 @@ export default function Layout() {
         </nav>
 
         {/* Sign Out Action */}
-        <div className="p-3 border-t border-neutral-200/70 dark:border-neutral-800/80">
+        <div className="p-3 border-t border-black/[0.06]">
           <button
             onClick={logout}
-            className="flex items-center gap-3 px-3.5 py-2 rounded-xl w-full text-[13.5px] font-medium text-neutral-500 dark:text-neutral-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 hover:text-rose-600 dark:hover:text-rose-400 transition-colors group cursor-pointer"
+            className="flex items-center gap-3 px-3.5 py-2 rounded-xl w-full text-[13px] font-semibold text-[#827A72] hover:bg-[#C87467]/10 hover:text-[#C87467] transition-colors group cursor-pointer"
           >
-            <LogOut className="w-4.5 h-4.5 transition-transform group-hover:-translate-x-0.5 stroke-[1.8]" />
+            <LogOut className="w-4 h-4 transition-transform group-hover:-translate-x-0.5 stroke-[1.8]" />
             <span>Sign Out</span>
           </button>
         </div>
       </aside>
 
-      {/* ── Main content ──────────────────────────────────────── */}
-      <main className="flex-1 relative overflow-auto bg-[#F4F1EA] dark:bg-[#0E0E10] page-transition">
+      {/* ── Main Workspace ────────────────────────────────────── */}
+      <main className="flex-1 relative overflow-auto page-transition">
         <Outlet />
       </main>
     </div>
