@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import {
   ChevronLeft, ChevronRight, Plus, X,
   CalendarDays, Clock, Loader2, CheckSquare, StickyNote, AlignLeft,
-  Trash2, Pencil, Check
+  Trash2, Pencil, Sparkles, Check
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { api } from "@/lib/api";
@@ -43,7 +43,11 @@ function AddTaskModal({
     setSaving(true);
     setError("");
     try {
-      await api.createTask({ title: title.trim(), description: description.trim() || undefined, dueAt: eventDate ? new Date(eventDate).toISOString() : undefined });
+      await api.createTask({
+        title: title.trim(),
+        description: description.trim() || undefined,
+        dueAt: eventDate ? new Date(eventDate).toISOString() : undefined
+      });
       const created = await api.createCalendarEvent({
         title: title.trim(),
         description: description.trim() || undefined,
@@ -63,76 +67,120 @@ function AddTaskModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-md p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 16 }}
+        initial={{ opacity: 0, scale: 0.96, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 16 }}
-        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-md bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-100 dark:border-neutral-800 overflow-hidden"
+        exit={{ opacity: 0, scale: 0.96, y: 12 }}
+        transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-md bg-white dark:bg-[#18181B] rounded-2xl shadow-2xl border border-neutral-200/80 dark:border-neutral-800 overflow-hidden"
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-100 dark:border-neutral-800">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center">
-              <CheckSquare className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+        <div className="flex items-center justify-between px-6 py-4.5 border-b border-neutral-200/60 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/40">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-indigo-500/10 dark:bg-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+              <CheckSquare className="w-4 h-4 stroke-[2.2]" />
             </div>
-            <h2 className="text-base font-semibold dark:text-white">New Task</h2>
+            <div>
+              <h2 className="text-base font-bold tracking-tight text-neutral-900 dark:text-white">New Calendar Task</h2>
+              <p className="text-xs text-neutral-500 dark:text-neutral-400">Add a scheduled item to your agenda</p>
+            </div>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
-            <X className="w-4 h-4 text-neutral-500" />
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+          >
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1.5">Title *</label>
-            <input ref={ref} type="text" value={title} onChange={(e) => setTitle(e.target.value)}
-              placeholder="Task title..."
-              className="w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-400 transition text-sm" />
-          </div>
-          <div>
-            <label className="flex items-center gap-1.5 text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1.5">
-              <CalendarDays className="w-3.5 h-3.5" /> Date *
+            <label className="block text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider mb-1.5">
+              Task Title *
             </label>
-            <input type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-400 transition text-sm" />
+            <input
+              ref={ref}
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="e.g., Weekly product sync & sprint review"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700/80 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition text-sm shadow-xs"
+            />
           </div>
+
+          <div>
+            <label className="flex items-center gap-1.5 text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider mb-1.5">
+              <CalendarDays className="w-3.5 h-3.5" /> Scheduled Date *
+            </label>
+            <input
+              type="date"
+              value={eventDate}
+              onChange={(e) => setEventDate(e.target.value)}
+              className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700/80 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition text-sm shadow-xs"
+            />
+          </div>
+
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="flex items-center gap-1 text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1.5">
-                <Clock className="w-3.5 h-3.5" /> Start
+              <label className="flex items-center gap-1.5 text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider mb-1.5">
+                <Clock className="w-3.5 h-3.5" /> Start Time
               </label>
-              <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-400 transition text-sm" />
+              <input
+                type="time"
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700/80 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition text-sm shadow-xs"
+              />
             </div>
             <div>
-              <label className="flex items-center gap-1 text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1.5">
-                <Clock className="w-3.5 h-3.5" /> End
+              <label className="flex items-center gap-1.5 text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider mb-1.5">
+                <Clock className="w-3.5 h-3.5" /> End Time
               </label>
-              <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-400 transition text-sm" />
+              <input
+                type="time"
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700/80 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition text-sm shadow-xs"
+              />
             </div>
           </div>
+
           <div>
-            <label className="flex items-center gap-1.5 text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1.5">
-              <AlignLeft className="w-3.5 h-3.5" /> Notes
+            <label className="flex items-center gap-1.5 text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider mb-1.5">
+              <AlignLeft className="w-3.5 h-3.5" /> Description & Notes
             </label>
-            <textarea value={description} onChange={(e) => setDescription(e.target.value)}
-              placeholder="Details (optional)..." rows={3}
-              className="w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-400 transition text-sm resize-none" />
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Add agenda, links or context..."
+              rows={3}
+              className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700/80 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition text-sm resize-none shadow-xs"
+            />
           </div>
-          {error && <p className="text-xs text-red-500">{error}</p>}
-          <div className="flex gap-3 pt-1">
-            <button type="button" onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition">
+
+          {error && (
+            <p className="text-xs text-rose-500 font-medium bg-rose-50 dark:bg-rose-950/30 p-2.5 rounded-lg border border-rose-200 dark:border-rose-900/50">
+              {error}
+            </p>
+          )}
+
+          <div className="flex gap-2.5 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer"
+            >
               Cancel
             </button>
-            <button type="submit" disabled={saving}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white text-sm font-semibold shadow-sm shadow-indigo-200 dark:shadow-none disabled:opacity-50 transition">
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
-              Add Task
+            <button
+              type="submit"
+              disabled={saving}
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 hover:bg-neutral-800 dark:hover:bg-neutral-100 text-sm font-semibold shadow-sm disabled:opacity-50 transition cursor-pointer"
+            >
+              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4 stroke-[2.2]" />}
+              Create Task
             </button>
           </div>
         </form>
@@ -152,7 +200,9 @@ export default function CalendarPage() {
   const [loading, setLoading] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
 
-  useEffect(() => { loadData(); }, [view, currentDate, tab]);
+  useEffect(() => {
+    loadData();
+  }, [view, currentDate, tab]);
 
   const loadData = async () => {
     setLoading(true);
@@ -163,7 +213,6 @@ export default function CalendarPage() {
         const heatmap = await api.getYearHeatmap(currentDate.year());
         setYearHeatmap(heatmap);
       } else if (effectiveView === "month") {
-        // For notes, fetch a broader range (last 90 days)
         const from = tab === "notes"
           ? dayjs().subtract(90, "day").format("YYYY-MM-DD")
           : currentDate.startOf("month").format("YYYY-MM-DD");
@@ -228,7 +277,7 @@ export default function CalendarPage() {
   const defaultDate = currentDate.format("YYYY-MM-DD");
 
   return (
-    <div className="h-full flex flex-col bg-[#EDE9DF] dark:bg-neutral-950">
+    <div className="h-full flex flex-col bg-[#F4F1EA] dark:bg-[#0E0E10]">
       <AnimatePresence>
         {showTaskModal && (
           <AddTaskModal
@@ -240,94 +289,101 @@ export default function CalendarPage() {
       </AnimatePresence>
 
       {/* ── Header ─────────────────────────────────────────────── */}
-      <div className="shrink-0 bg-[#FAF9F5] dark:bg-neutral-900 border-b border-neutral-200/70 dark:border-neutral-800 shadow-xs">
-        {/* Top row: title + nav + add button */}
-        <div className="px-6 pt-5 pb-3 flex items-center justify-between gap-4">
+      <div className="shrink-0 bg-[#FAF8F5]/90 dark:bg-[#141416]/90 backdrop-blur-md border-b border-neutral-200/80 dark:border-neutral-800/80 shadow-xs">
+        <div className="px-6 pt-5 pb-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            {/* Nav arrows */}
-            <div className="flex items-center gap-1">
+            {/* Nav Arrows & Title */}
+            <div className="flex items-center gap-1 bg-neutral-200/50 dark:bg-neutral-800/60 p-1 rounded-xl border border-neutral-200/60 dark:border-neutral-800">
               <button
                 onClick={() => navigate("prev")}
-                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition text-neutral-500"
+                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white dark:hover:bg-neutral-700 text-neutral-600 dark:text-neutral-300 transition shadow-xs cursor-pointer"
+                title="Previous"
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-4 h-4 stroke-[2]" />
               </button>
               <button
                 onClick={() => navigate("next")}
-                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition text-neutral-500"
+                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white dark:hover:bg-neutral-700 text-neutral-600 dark:text-neutral-300 transition shadow-xs cursor-pointer"
+                title="Next"
               >
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-4 h-4 stroke-[2]" />
               </button>
             </div>
 
-            {/* Month/Year title */}
-            <h1 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">
-              {tab === "notes" || view === "month"
-                ? currentDate.format("MMMM")
-                : view === "year"
-                  ? currentDate.format("YYYY")
-                  : currentDate.format("MMMM D")}
-              {(tab === "notes" || view === "month") && (
-                <span className="text-neutral-400 dark:text-neutral-500 font-medium ml-2 text-xl">
-                  {currentDate.format("YYYY")}
-                </span>
-              )}
-            </h1>
+            {/* Current View Title */}
+            <div>
+              <h1 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2">
+                {tab === "notes" || view === "month"
+                  ? currentDate.format("MMMM")
+                  : view === "year"
+                    ? currentDate.format("YYYY")
+                    : currentDate.format("dddd, MMM D")}
+                {(tab === "notes" || view === "month") && (
+                  <span className="text-neutral-400 dark:text-neutral-500 font-semibold text-lg">
+                    {currentDate.format("YYYY")}
+                  </span>
+                )}
+              </h1>
+            </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            {/* Today button */}
+          <div className="flex items-center gap-3">
+            {/* Today Button */}
             <button
               onClick={() => setCurrentDate(dayjs())}
-              className="px-4 py-1.5 text-sm font-semibold rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition"
+              className="px-3.5 py-1.5 text-xs font-semibold rounded-xl border border-neutral-200/80 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition shadow-xs cursor-pointer"
             >
               Today
             </button>
 
-            {/* Tab toggle */}
-            <div className="flex items-center bg-neutral-100 dark:bg-neutral-800 rounded-lg p-0.5">
+            {/* Tasks / Notes Tab Pill Switcher */}
+            <div className="flex items-center bg-neutral-200/50 dark:bg-neutral-800/60 rounded-xl p-1 border border-neutral-200/60 dark:border-neutral-800">
               {(["tasks", "notes"] as TabMode[]).map((t) => (
                 <button
                   key={t}
                   onClick={() => setTab(t)}
                   className={clsx(
-                    "flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-md transition-all duration-200",
+                    "flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all duration-150 cursor-pointer select-none",
                     tab === t
-                      ? "bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white shadow-sm"
-                      : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300"
+                      ? "bg-white dark:bg-[#202024] text-neutral-900 dark:text-white shadow-xs"
+                      : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
                   )}
                 >
-                  {t === "tasks" ? <CheckSquare className="w-3.5 h-3.5" /> : <StickyNote className="w-3.5 h-3.5" />}
+                  {t === "tasks" ? (
+                    <CheckSquare className="w-3.5 h-3.5 stroke-[2]" />
+                  ) : (
+                    <StickyNote className="w-3.5 h-3.5 stroke-[2]" />
+                  )}
                   {t === "tasks" ? "Tasks" : "Notes"}
                 </button>
               ))}
             </div>
 
-            {/* Add task button (tasks only) */}
+            {/* Add Task Button (Tasks tab only) */}
             {tab === "tasks" && (
               <button
                 onClick={() => setShowTaskModal(true)}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg font-semibold text-sm bg-indigo-600 hover:bg-indigo-700 text-white transition shadow-sm"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-semibold text-xs bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 hover:bg-neutral-800 dark:hover:bg-neutral-100 transition shadow-xs cursor-pointer"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-4 h-4 stroke-[2.2]" />
                 Add Task
               </button>
             )}
           </div>
         </div>
 
-        {/* Bottom row: View toggle pills (tasks only) */}
+        {/* View Mode Switcher (Year / Month / Day - Only for Tasks) */}
         {tab === "tasks" && (
-          <div className="px-6 pb-3 flex items-center gap-1">
+          <div className="px-6 pb-3.5 flex items-center gap-1.5">
             {(["year", "month", "day"] as ViewMode[]).map((v) => (
               <button
                 key={v}
                 onClick={() => setView(v)}
                 className={clsx(
-                  "px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-150 capitalize",
+                  "px-3 py-1 rounded-lg text-xs font-semibold capitalize transition-all duration-150 cursor-pointer",
                   view === v
-                    ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900"
-                    : "text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-800 dark:hover:text-neutral-200"
+                    ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 shadow-xs"
+                    : "text-neutral-500 dark:text-neutral-400 hover:bg-neutral-200/50 dark:hover:bg-neutral-800/60 hover:text-neutral-800 dark:hover:text-neutral-200"
                 )}
               >
                 {v}
@@ -337,11 +393,12 @@ export default function CalendarPage() {
         )}
       </div>
 
-      {/* ── Content ─────────────────────────────────────────────── */}
+      {/* ── Content Body ───────────────────────────────────────── */}
       <div className="flex-1 overflow-auto relative">
         {loading ? (
-          <div className="flex items-center justify-center h-full text-neutral-400 gap-2">
-            <Loader2 className="w-5 h-5 animate-spin" /> Loading…
+          <div className="flex items-center justify-center h-full text-neutral-400 gap-2.5">
+            <Loader2 className="w-5 h-5 animate-spin text-indigo-500" />
+            <span className="text-sm font-medium">Loading agenda...</span>
           </div>
         ) : tab === "notes" ? (
           <NotesFeed
@@ -350,18 +407,18 @@ export default function CalendarPage() {
             onReload={loadData}
           />
         ) : view === "year" ? (
-          <div className="p-6">
+          <div className="max-w-6xl mx-auto p-8">
             <YearView heatmap={yearHeatmap} year={currentDate.year()} />
           </div>
         ) : view === "month" ? (
           <AnimatePresence mode="wait">
             <motion.div
               key={`month-${tab}-${currentDate.format("YYYY-MM")}`}
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.22 }}
-              className="p-6"
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.18 }}
+              className="max-w-7xl mx-auto p-6"
             >
               <MonthView
                 events={filteredEvents}
@@ -375,11 +432,11 @@ export default function CalendarPage() {
           <AnimatePresence mode="wait">
             <motion.div
               key={`day-${tab}-${currentDate.format("YYYY-MM-DD")}`}
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.22 }}
-              className="p-6"
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.18 }}
+              className="max-w-3xl mx-auto p-6"
             >
               <DayView events={filteredEvents} tab={tab} />
             </motion.div>
@@ -390,7 +447,7 @@ export default function CalendarPage() {
   );
 }
 
-// ─── Notes Feed — diary-style, last 7 days by default ────────────────────────
+// ─── Notes Feed (Modern Continuous Scrolling Mini-Diary Feed) ─────────────────
 function NotesFeed({
   events, onCreated, onReload,
 }: {
@@ -402,10 +459,7 @@ function NotesFeed({
   const [addingDate, setAddingDate] = useState<string | null>(null);
   const [manualDates, setManualDates] = useState<string[]>([]);
 
-  // Group events by date
   const byDate: Record<string, CalendarEvent[]> = {};
-
-  // Always include the last 7 days by default so the user has immediate day cards
   const defaultRecentDays = Array.from({ length: 7 }, (_, i) =>
     dayjs().subtract(i, "day").format("YYYY-MM-DD")
   );
@@ -418,8 +472,7 @@ function NotesFeed({
   });
   manualDates.forEach(d => allDateStrings.add(d));
 
-  // Build date list sorted descending, take top 7 if not showAll
-  let days = Array.from(allDateStrings).sort((a,b) => b.localeCompare(a));
+  let days = Array.from(allDateStrings).sort((a, b) => b.localeCompare(a));
   if (!showAll && days.length > 7) {
     days = days.slice(0, 7);
   }
@@ -434,7 +487,7 @@ function NotesFeed({
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-8 space-y-4">
+    <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
       {days.map((date) => (
         <DiaryDayCard
           key={date}
@@ -445,34 +498,34 @@ function NotesFeed({
         />
       ))}
 
-      {/* Footer actions */}
-      <div className="flex items-center justify-between pt-6 pb-8 border-t border-neutral-200/60 dark:border-neutral-800 mt-4">
+      {/* Footer controls */}
+      <div className="flex items-center justify-between pt-6 pb-12 border-t border-neutral-200/80 dark:border-neutral-800/80">
         {!showAll && allDateStrings.size > 7 ? (
           <button
             onClick={() => setShowAll(true)}
-            className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
+            className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition cursor-pointer"
           >
-            See all notes →
+            Show earlier notes ({allDateStrings.size - 7} more days) →
           </button>
         ) : showAll && allDateStrings.size > 7 ? (
           <button
             onClick={() => setShowAll(false)}
-            className="text-sm font-semibold text-neutral-500 hover:underline"
+            className="text-xs font-semibold text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 transition cursor-pointer"
           >
-            ← Show less
+            ← Show recent 7 days only
           </button>
         ) : <div />}
 
         <button
           onClick={() => setAddingDate(dayjs().format("YYYY-MM-DD"))}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-semibold text-sm hover:bg-neutral-700 dark:hover:bg-neutral-100 transition shadow-sm"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-[#18181B] border border-neutral-200/80 dark:border-neutral-800 text-neutral-900 dark:text-white font-semibold text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800 transition shadow-xs cursor-pointer"
         >
-          <Plus className="w-4 h-4" />
-          Add Day / Note
+          <Plus className="w-3.5 h-3.5 stroke-[2.2]" />
+          Add Specific Date
         </button>
       </div>
 
-      {/* Quick-add modal for extra date */}
+      {/* Quick Add Day Modal */}
       <AnimatePresence>
         {addingDate && (
           <QuickAddNoteModal
@@ -486,9 +539,9 @@ function NotesFeed({
   );
 }
 
-// ─── Single diary day card ────────────────────────────────────────────────────
+// ─── Single Day Note Card ─────────────────────────────────────────────────────
 function DiaryDayCard({
-  date, notes, onCreated,
+  date, notes, onCreated, onReload,
 }: {
   date: string;
   notes: CalendarEvent[];
@@ -496,6 +549,7 @@ function DiaryDayCard({
   onReload: () => void;
 }) {
   const d = dayjs(date);
+  const isToday = d.isSame(dayjs(), "day");
   const [text, setText] = useState("");
   const [saving, setSaving] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -547,7 +601,7 @@ function DiaryDayCard({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if ((e.key === "Enter" && (e.ctrlKey || e.metaKey))) {
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
       handleSave();
     }
@@ -556,107 +610,145 @@ function DiaryDayCard({
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
     e.target.style.height = "auto";
-    e.target.style.height = Math.min(e.target.scrollHeight, 220) + "px";
+    e.target.style.height = Math.min(e.target.scrollHeight, 240) + "px";
   };
 
   return (
-    <div className="mb-1">
-      {/* Date header — styled like the diary screenshot */}
-      <div className="bg-[#EDE9DF] dark:bg-neutral-800/60 rounded-t-xl px-5 py-3 flex items-center justify-between">
-        <div>
-          <span className="text-2xl font-bold text-neutral-900 dark:text-white mr-2">
+    <div className="bg-white dark:bg-[#18181B] rounded-2xl border border-neutral-200/80 dark:border-neutral-800/90 overflow-hidden shadow-xs hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors">
+      {/* Date Header Strip */}
+      <div className="px-5 py-3.5 bg-neutral-50/70 dark:bg-neutral-900/50 border-b border-neutral-200/60 dark:border-neutral-800 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className={clsx(
+            "w-9 h-9 rounded-xl flex items-center justify-center font-bold text-base shadow-xs",
+            isToday
+              ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-950"
+              : "bg-neutral-200/70 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200"
+          )}>
             {d.format("DD")}
-          </span>
-          <span className="text-sm font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">
-            {d.format("MMM, dddd").toUpperCase()}
-          </span>
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-neutral-700 dark:text-neutral-300">
+                {d.format("dddd")}
+              </span>
+              {isToday && (
+                <span className="px-1.5 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold uppercase tracking-wide border border-indigo-200/60 dark:border-indigo-800">
+                  Today
+                </span>
+              )}
+            </div>
+            <p className="text-[11px] text-neutral-400 dark:text-neutral-500 font-medium">
+              {d.format("MMMM D, YYYY")}
+            </p>
+          </div>
         </div>
+
         {notes.length > 0 && (
-          <span className="text-xs font-medium text-neutral-400 dark:text-neutral-500">
+          <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-neutral-200/40 dark:bg-neutral-800/60 text-neutral-600 dark:text-neutral-400">
             {notes.length} note{notes.length > 1 ? "s" : ""}
           </span>
         )}
       </div>
 
-      {/* Body */}
-      <div className="bg-[#FAF9F5] dark:bg-neutral-900 border border-t-0 border-neutral-200/70 dark:border-neutral-800 rounded-b-xl px-5 pt-4 pb-5 mb-4 shadow-sm">
-        {/* Existing notes */}
-        {notes.map((note) => (
-          <div key={note.id} className="group relative flex flex-col mb-3">
-            {editId === note.id ? (
-              <div className="flex flex-col gap-2 mb-2 p-2 bg-white dark:bg-neutral-800/80 rounded-xl border border-indigo-200 dark:border-indigo-800/60 shadow-xs">
-                <textarea
-                  rows={2}
-                  className="w-full px-2 py-1 outline-none text-sm bg-transparent text-neutral-900 dark:text-neutral-100 resize-none"
-                  value={editText}
-                  onChange={e => setEditText(e.target.value)}
-                  onKeyDown={e => {
-                    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
-                      e.preventDefault();
-                      handleSaveEdit();
-                    } else if (e.key === "Escape") {
-                      setEditId(null);
-                    }
-                  }}
-                  autoFocus
-                />
-                <div className="flex items-center justify-between pt-1 border-t border-neutral-100 dark:border-neutral-700">
-                  <span className="text-[11px] text-neutral-400">Press Ctrl+Enter to save</span>
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      onClick={() => setEditId(null)}
-                      className="px-2.5 py-1 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleSaveEdit}
-                      className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition"
-                    >
-                      Save Changes
-                    </button>
+      {/* Note Items & Writing Area */}
+      <div className="p-5 space-y-3.5">
+        {/* Existing Note List */}
+        {notes.length > 0 && (
+          <div className="space-y-2.5">
+            {notes.map((note) => (
+              <div key={note.id} className="group relative rounded-xl transition-all">
+                {editId === note.id ? (
+                  <div className="p-3 bg-neutral-50 dark:bg-neutral-900 rounded-xl border border-indigo-300 dark:border-indigo-800/80 shadow-xs space-y-2">
+                    <textarea
+                      rows={2}
+                      className="w-full bg-transparent text-sm text-neutral-900 dark:text-white outline-none resize-none"
+                      value={editText}
+                      onChange={(e) => setEditText(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+                          e.preventDefault();
+                          handleSaveEdit();
+                        } else if (e.key === "Escape") {
+                          setEditId(null);
+                        }
+                      }}
+                      autoFocus
+                    />
+                    <div className="flex items-center justify-between pt-2 border-t border-neutral-200/60 dark:border-neutral-800">
+                      <span className="text-[10px] text-neutral-400">Ctrl+Enter to save • Esc to cancel</span>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={() => setEditId(null)}
+                          className="px-2.5 py-1 text-xs font-semibold text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 transition"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={handleSaveEdit}
+                          className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow-xs transition"
+                        >
+                          Save Changes
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="flex items-start justify-between gap-3 p-3 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 border border-neutral-200/40 dark:border-neutral-800/50 hover:bg-neutral-50 dark:hover:bg-neutral-900/60 transition">
+                    <div className="flex items-start gap-2.5 flex-1 min-w-0">
+                      <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-2 flex-shrink-0" />
+                      <p className="text-sm font-normal text-neutral-800 dark:text-neutral-200 leading-relaxed whitespace-pre-wrap flex-1">
+                        {note.title}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={() => handleEdit(note)}
+                        title="Edit note"
+                        className="p-1 rounded-lg text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-neutral-200/50 dark:hover:bg-neutral-800 transition cursor-pointer"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(note.id)}
+                        title="Delete note"
+                        className="p-1 rounded-lg text-neutral-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
-            ) : (
-              <>
-                <p className="text-neutral-800 dark:text-neutral-200 text-[15px] leading-relaxed pl-2 border-l-2 border-indigo-400/60 dark:border-indigo-500 whitespace-pre-wrap">
-                  {note.title}
-                </p>
-                <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition flex gap-1 bg-[#FAF9F5] dark:bg-neutral-900 px-1 rounded shadow-sm">
-                  <button onClick={() => handleEdit(note)} title="Edit note" className="p-1 text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded transition"><Pencil className="w-3.5 h-3.5"/></button>
-                  <button onClick={() => handleDelete(note.id)} title="Delete note" className="p-1 text-neutral-400 hover:text-red-600 dark:hover:text-red-400 rounded transition"><Trash2 className="w-3.5 h-3.5"/></button>
-                </div>
-              </>
-            )}
+            ))}
           </div>
-        ))}
+        )}
 
-        {/* Inline write area */}
-        <div className="relative mt-2">
+        {/* Inline Note Entry Box */}
+        <div className="pt-1">
           <textarea
             ref={textareaRef}
             value={text}
             onChange={handleInput}
             onKeyDown={handleKeyDown}
-            placeholder="Write your thoughts here... (Ctrl+Enter to save)"
-            rows={2}
-            className="w-full bg-transparent resize-none outline-none text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400/70 dark:placeholder:text-neutral-600 text-[15px] leading-relaxed"
-            style={{ minHeight: "48px" }}
+            placeholder={`Add a quick note for ${d.format("MMM D")}... (Ctrl+Enter to save)`}
+            rows={1}
+            className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-100/60 dark:bg-neutral-900/60 border border-neutral-200/60 dark:border-neutral-800 text-neutral-900 dark:text-white placeholder:text-neutral-400 dark:placeholder:text-neutral-500 text-sm leading-relaxed outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition resize-none"
+            style={{ minHeight: "44px" }}
           />
+
           {text.trim() && (
             <motion.div
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-center justify-between mt-2 pt-2 border-t border-neutral-200/50 dark:border-neutral-800"
+              className="flex items-center justify-between mt-2 px-1"
             >
-              <span className="text-[11px] text-neutral-400">Ctrl+Enter to save</span>
+              <span className="text-[11px] text-neutral-400">Ctrl + Enter to save</span>
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-semibold hover:bg-neutral-700 dark:hover:bg-neutral-100 transition disabled:opacity-50 shadow-xs"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 text-xs font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-100 transition shadow-xs disabled:opacity-50 cursor-pointer"
               >
-                {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
+                {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5 stroke-[2.2]" />}
                 Save Note
               </button>
             </motion.div>
@@ -667,7 +759,7 @@ function DiaryDayCard({
   );
 }
 
-// ─── Quick-add note modal (for "Add Day" button) ──────────────────────────────
+// ─── Quick Add Note Modal ─────────────────────────────────────────────────────
 function QuickAddNoteModal({
   date, onClose, onAdded,
 }: {
@@ -689,53 +781,57 @@ function QuickAddNoteModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-md p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 12 }}
+        initial={{ opacity: 0, scale: 0.96, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 12 }}
-        transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-sm bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-100 dark:border-neutral-800 overflow-hidden"
+        exit={{ opacity: 0, scale: 0.96, y: 12 }}
+        transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-sm bg-white dark:bg-[#18181B] rounded-2xl shadow-2xl border border-neutral-200/80 dark:border-neutral-800 overflow-hidden"
       >
-        {/* Date header */}
-        <div className="bg-[#EDE9DF] dark:bg-neutral-800 px-6 py-4 flex items-center justify-between">
-          <div>
-            <span className="text-xl font-bold text-neutral-900 dark:text-white mr-2">
-              {dayjs(selectedDate).format("DD")}
-            </span>
-            <span className="text-sm font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">
-              {dayjs(selectedDate).format("MMM, dddd").toUpperCase()}
-            </span>
+        <div className="px-6 py-4.5 bg-neutral-50/70 dark:bg-neutral-900/50 border-b border-neutral-200/60 dark:border-neutral-800 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-indigo-500/10 dark:bg-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+              <StickyNote className="w-4 h-4 stroke-[2.2]" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-neutral-900 dark:text-white">Add Date Note</h3>
+              <p className="text-[11px] text-neutral-500">Pick any date for the notes feed</p>
+            </div>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/60 dark:hover:bg-neutral-700 transition">
-            <X className="w-4 h-4 text-neutral-500" />
+          <button onClick={onClose} className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition">
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         <div className="p-6 space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider mb-2">
               Select Date
             </label>
             <input
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-400 text-sm"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700/80 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm shadow-xs"
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-2 border-t border-neutral-100 dark:border-neutral-800">
-            <button onClick={onClose}
-              className="px-4 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition">
+          <div className="flex justify-end gap-2.5 pt-2 border-t border-neutral-200/60 dark:border-neutral-800">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 text-xs font-semibold text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer"
+            >
               Cancel
             </button>
-            <button onClick={handleSave}
-              className="flex items-center gap-2 px-5 py-2 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-semibold text-sm hover:bg-neutral-700 dark:hover:bg-neutral-100 transition">
-              <Plus className="w-3.5 h-3.5" />
-              Add Day
+            <button
+              onClick={handleSave}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-950 font-semibold text-xs hover:bg-neutral-800 dark:hover:bg-neutral-100 transition shadow-xs cursor-pointer"
+            >
+              <Plus className="w-3.5 h-3.5 stroke-[2.2]" />
+              Add Day Card
             </button>
           </div>
         </div>
@@ -744,13 +840,13 @@ function QuickAddNoteModal({
   );
 }
 
-// ─── Year View ────────────────────────────────────────────────────────────────
+// ─── Year View (Task Activity Heatmap) ─────────────────────────────────────────
 function YearView({ heatmap, year }: { heatmap: Record<number, number>; year: number }) {
   const months = Array.from({ length: 12 }, (_, i) => dayjs().year(year).month(i));
   const maxCount = Math.max(...Object.values(heatmap), 1);
 
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {months.map((m) => {
         const monthNum = m.month() + 1;
         const count = heatmap[monthNum] || 0;
@@ -758,14 +854,27 @@ function YearView({ heatmap, year }: { heatmap: Record<number, number>; year: nu
         return (
           <motion.div
             key={monthNum}
-            whileHover={{ y: -2, scale: 1.01 }}
-            transition={{ duration: 0.15 }}
-            className="rounded-2xl p-5 border border-neutral-100 dark:border-neutral-800 cursor-pointer shadow-sm hover:shadow-md transition-shadow"
-            style={{ backgroundColor: `rgba(99, 102, 241, ${0.06 + intensity * 0.3})` }}
+            whileHover={{ y: -2 }}
+            transition={{ duration: 0.12 }}
+            className="rounded-2xl p-5 border border-neutral-200/80 dark:border-neutral-800/80 bg-white dark:bg-[#18181B] shadow-xs hover:shadow-md transition-shadow relative overflow-hidden group"
           >
-            <div className="text-base font-bold dark:text-white">{m.format("MMMM")}</div>
-            <div className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
-              {count} event{count !== 1 && "s"}
+            <div
+              className="absolute inset-0 opacity-15 dark:opacity-20 pointer-events-none transition-opacity"
+              style={{ backgroundColor: `rgba(99, 102, 241, ${0.1 + intensity * 0.9})` }}
+            />
+            <div className="relative z-10 flex items-center justify-between mb-2">
+              <h4 className="text-base font-bold text-neutral-900 dark:text-white">
+                {m.format("MMMM")}
+              </h4>
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200/50 dark:border-indigo-800">
+                {count} {count === 1 ? "task" : "tasks"}
+              </span>
+            </div>
+            <div className="relative z-10 w-full bg-neutral-100 dark:bg-neutral-800 h-1.5 rounded-full overflow-hidden mt-4">
+              <div
+                className="bg-indigo-500 h-full rounded-full transition-all duration-300"
+                style={{ width: `${Math.min(100, Math.max(8, intensity * 100))}%` }}
+              />
             </div>
           </motion.div>
         );
@@ -774,7 +883,7 @@ function YearView({ heatmap, year }: { heatmap: Record<number, number>; year: nu
   );
 }
 
-// ─── Month View ───────────────────────────────────────────────────────────────
+// ─── Month View (Grid) ────────────────────────────────────────────────────────
 function MonthView({
   events, month, tab, onDayClick,
 }: {
@@ -795,100 +904,133 @@ function MonthView({
     return acc;
   }, {} as Record<string, CalendarEvent[]>);
 
-  const accent = tab === "tasks"
-    ? { bg: "bg-indigo-100 dark:bg-indigo-900/40", text: "text-indigo-800 dark:text-indigo-200", ring: "ring-indigo-300 dark:ring-indigo-700" }
-    : { bg: "bg-emerald-100 dark:bg-emerald-900/40", text: "text-emerald-800 dark:text-emerald-200", ring: "ring-emerald-300 dark:ring-emerald-700" };
-
   return (
-    <div className="grid grid-cols-7 gap-1.5">
-      {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-        <div key={d} className="text-center text-xs font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider py-2">{d}</div>
-      ))}
-      {blanks.map((_, i) => <div key={`b${i}`} />)}
-      {days.map((day) => {
-        const date = month.date(day);
-        const dateStr = date.format("YYYY-MM-DD");
-        const dayEvents = byDate[dateStr] || [];
-        const isToday = date.isSame(dayjs(), "day");
+    <div className="bg-white dark:bg-[#18181B] rounded-2xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs p-4 overflow-hidden">
+      {/* Weekday labels */}
+      <div className="grid grid-cols-7 gap-2 mb-2">
+        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+          <div key={d} className="text-center text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider py-1.5">
+            {d}
+          </div>
+        ))}
+      </div>
 
-        return (
-          <motion.div
-            key={day}
-            onClick={() => onDayClick(date)}
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.12 }}
-            className={clsx(
-              "rounded-2xl p-2.5 min-h-[88px] cursor-pointer border transition-shadow hover:shadow-md dark:border-neutral-800",
-              isToday
-                ? `ring-2 ${accent.ring} bg-white dark:bg-neutral-900 border-transparent`
-                : "bg-white/60 dark:bg-neutral-900/40 border-neutral-100"
-            )}
-          >
-            <div className={clsx(
-              "text-sm font-bold w-7 h-7 flex items-center justify-center rounded-full",
-              isToday
-                ? (tab === "tasks" ? "bg-indigo-500 text-white" : "bg-emerald-500 text-white")
-                : "text-neutral-700 dark:text-neutral-300"
-            )}>
-              {day}
-            </div>
-            <div className="mt-1 space-y-0.5">
-              {dayEvents.slice(0, 3).map((e) => (
-                <div key={e.id} className={clsx("text-[11px] px-1.5 py-0.5 rounded-lg truncate font-medium", accent.bg, accent.text)}>
-                  {e.completed ? "✓ " : ""}{e.title}
-                </div>
-              ))}
-              {dayEvents.length > 3 && (
-                <div className="text-[11px] text-neutral-400 pl-1">+{dayEvents.length - 3} more</div>
+      {/* Days grid */}
+      <div className="grid grid-cols-7 gap-2">
+        {blanks.map((_, i) => (
+          <div key={`b${i}`} className="min-h-[100px] rounded-xl bg-neutral-50/30 dark:bg-neutral-900/20 border border-transparent" />
+        ))}
+        {days.map((day) => {
+          const date = month.date(day);
+          const dateStr = date.format("YYYY-MM-DD");
+          const dayEvents = byDate[dateStr] || [];
+          const isToday = date.isSame(dayjs(), "day");
+
+          return (
+            <motion.div
+              key={day}
+              onClick={() => onDayClick(date)}
+              whileHover={{ scale: 1.01 }}
+              transition={{ duration: 0.1 }}
+              className={clsx(
+                "rounded-xl p-2.5 min-h-[100px] cursor-pointer border transition-all flex flex-col justify-between group",
+                isToday
+                  ? "ring-2 ring-indigo-500/80 bg-indigo-50/20 dark:bg-indigo-950/20 border-indigo-200 dark:border-indigo-800"
+                  : "bg-neutral-50/50 dark:bg-neutral-900/40 hover:bg-white dark:hover:bg-neutral-800/80 border-neutral-200/60 dark:border-neutral-800/70"
               )}
-            </div>
-          </motion.div>
-        );
-      })}
+            >
+              <div className="flex items-center justify-between">
+                <span className={clsx(
+                  "text-xs font-bold w-6 h-6 flex items-center justify-center rounded-lg transition-colors",
+                  isToday
+                    ? "bg-indigo-600 text-white shadow-xs"
+                    : "text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-900 dark:group-hover:text-white"
+                )}>
+                  {day}
+                </span>
+                {dayEvents.length > 0 && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                )}
+              </div>
+
+              {/* Event Chips */}
+              <div className="mt-2 space-y-1">
+                {dayEvents.slice(0, 2).map((e) => (
+                  <div
+                    key={e.id}
+                    className="text-[11px] px-2 py-1 rounded-md truncate font-semibold bg-indigo-50 dark:bg-indigo-950/50 text-indigo-900 dark:text-indigo-200 border-l-2 border-indigo-500"
+                  >
+                    {e.completed ? "✓ " : ""}{e.title}
+                  </div>
+                ))}
+                {dayEvents.length > 2 && (
+                  <div className="text-[10px] text-neutral-400 font-semibold pl-1">
+                    +{dayEvents.length - 2} more
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
     </div>
   );
 }
 
-// ─── Day View ─────────────────────────────────────────────────────────────────
+// ─── Day View (Timeline Agenda) ───────────────────────────────────────────────
 function DayView({ events, tab }: { events: CalendarEvent[]; tab: TabMode }) {
   const allDay = events.filter((e) => !e.startAt);
   const timed = events.filter((e) => !!e.startAt);
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
-  const tagCls = tab === "tasks"
-    ? "bg-indigo-100 text-indigo-900 dark:bg-indigo-900/50 dark:text-indigo-200 border-l-2 border-indigo-400"
-    : "bg-emerald-100 text-emerald-900 dark:bg-emerald-900/50 dark:text-emerald-200 border-l-2 border-emerald-400";
-
   return (
-    <div className="max-w-2xl space-y-3">
+    <div className="space-y-4">
+      {/* All-day Section */}
       {allDay.length > 0 && (
-        <div className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white/60 dark:bg-neutral-900/40 p-4">
-          <div className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">All Day</div>
-          <div className="space-y-1.5">
+        <div className="rounded-2xl border border-neutral-200/80 dark:border-neutral-800 bg-white dark:bg-[#18181B] p-5 shadow-xs">
+          <div className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-3">All Day Tasks</div>
+          <div className="space-y-2">
             {allDay.map((e) => (
-              <motion.div key={e.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
-                className={clsx("px-3 py-2 rounded-xl", tagCls)}>
-                <div className="font-semibold text-sm">{e.completed ? "✓ " : ""}{e.title}</div>
-                {e.description && <div className="text-xs mt-0.5 opacity-75">{e.description}</div>}
+              <motion.div
+                key={e.id}
+                initial={{ opacity: 0, x: -6 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="px-3.5 py-2.5 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/40 text-indigo-900 dark:text-indigo-200 border-l-3 border-indigo-500 shadow-2xs"
+              >
+                <div className="font-bold text-sm">{e.completed ? "✓ " : ""}{e.title}</div>
+                {e.description && <div className="text-xs mt-0.5 opacity-80">{e.description}</div>}
               </motion.div>
             ))}
           </div>
         </div>
       )}
 
-      <div className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white/60 dark:bg-neutral-900/40 overflow-hidden">
+      {/* Hourly Timeline */}
+      <div className="rounded-2xl border border-neutral-200/80 dark:border-neutral-800 bg-white dark:bg-[#18181B] overflow-hidden shadow-xs">
         {hours.map((hour) => {
           const hourEvents = timed.filter((e) => e.startAt && dayjs(e.startAt).hour() === hour);
           const label = hour === 0 ? "12 AM" : hour < 12 ? `${hour} AM` : hour === 12 ? "12 PM" : `${hour - 12} PM`;
           return (
-            <div key={hour} className={clsx("flex gap-4 px-4 py-1 min-h-[40px]", hour < 23 && "border-b border-neutral-50 dark:border-neutral-800/50")}>
-              <div className="w-14 text-xs text-neutral-300 dark:text-neutral-600 pt-1 text-right flex-shrink-0">{label}</div>
-              <div className="flex-1 py-0.5 space-y-1">
+            <div
+              key={hour}
+              className={clsx(
+                "flex gap-4 px-5 py-2 min-h-[48px] items-start",
+                hour < 23 && "border-b border-neutral-100 dark:border-neutral-800/60"
+              )}
+            >
+              <div className="w-14 text-xs font-semibold text-neutral-400 pt-1 text-right flex-shrink-0">
+                {label}
+              </div>
+              <div className="flex-1 py-0.5 space-y-1.5 border-l border-dashed border-neutral-200 dark:border-neutral-800 pl-4 min-h-[36px]">
                 {hourEvents.map((e) => (
-                  <motion.div key={e.id} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }}
-                    className={clsx("px-2.5 py-1.5 rounded-lg text-xs", tagCls)}>
-                    <div className="font-semibold">{e.title}</div>
-                    {e.description && <div className="opacity-70 mt-0.5">{e.description}</div>}
+                  <motion.div
+                    key={e.id}
+                    initial={{ opacity: 0, x: -4 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="px-3 py-2 rounded-xl text-xs bg-indigo-50/80 dark:bg-indigo-950/50 text-indigo-950 dark:text-indigo-100 border-l-3 border-indigo-500 shadow-2xs"
+                  >
+                    <div className="font-bold text-sm">{e.title}</div>
+                    {e.description && <div className="opacity-75 mt-0.5 text-xs">{e.description}</div>}
                   </motion.div>
                 ))}
               </div>

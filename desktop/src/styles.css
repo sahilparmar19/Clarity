@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 @theme {
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: 'Newsreader', Georgia, Cambria, "Times New Roman", Times, serif;
+
   --color-primary-50: #eef2ff;
   --color-primary-100: #e0e7ff;
   --color-primary-200: #c7d2fe;
@@ -13,8 +16,8 @@
 
 @layer base {
   body {
-    @apply bg-[#EDE9DF] dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 antialiased;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    @apply bg-[#F4F1EA] dark:bg-[#0E0E10] text-neutral-900 dark:text-neutral-100 antialiased;
+    font-family: var(--font-sans);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
@@ -27,32 +30,39 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
 }
 
-/* ── Scrollbar ────────────────────────────────────── */
+/* ── Refined Subtle Scrollbars ────────────────────── */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-neutral-200 dark:bg-neutral-700 rounded-full;
+  background-color: rgba(0, 0, 0, 0.12);
+  border-radius: 9999px;
+}
+:is(.dark) ::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-neutral-300 dark:bg-neutral-600;
+  background-color: rgba(0, 0, 0, 0.22);
+}
+:is(.dark) ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 /* ── Page transitions ─────────────────────────────── */
 .page-transition {
-  animation: page-fade-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: page-fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes page-fade-in {
-  from { opacity: 0; transform: translateY(4px); }
+  from { opacity: 0; transform: translateY(3px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
@@ -60,17 +70,34 @@
 .notebook-lines {
   background-image: repeating-linear-gradient(
     transparent,
-    transparent 31px,
-    #e5e7eb 31px,
-    #e5e7eb 32px
+    transparent 35px,
+    rgba(0, 0, 0, 0.06) 35px,
+    rgba(0, 0, 0, 0.06) 36px
   );
-  background-size: 100% 32px;
-  background-position: 0 48px;
+  background-size: 100% 36px;
+  background-position: 0 44px;
+}
+
+:is(.dark) .notebook-lines {
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 35px,
+    rgba(255, 255, 255, 0.06) 35px,
+    rgba(255, 255, 255, 0.06) 36px
+  );
 }
 
 /* ── Date input polish ────────────────────────────── */
 input[type="date"]::-webkit-calendar-picker-indicator,
-input[type="time"]::-webkit-calendar-picker-indicator {
-  opacity: 0.4;
+input[type="time"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  opacity: 0.5;
   cursor: pointer;
+  filter: invert(0.2);
+}
+
+:is(.dark) input[type="date"]::-webkit-calendar-picker-indicator,
+:is(.dark) input[type="time"]::-webkit-calendar-picker-indicator,
+:is(.dark) input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
 }
