@@ -277,7 +277,7 @@ export default function CalendarPage() {
   const defaultDate = currentDate.format("YYYY-MM-DD");
 
   return (
-    <div className="h-full flex flex-col bg-[#090A0F]">
+    <div className="h-full flex flex-col bg-[#08090E]">
       <AnimatePresence>
         {showTaskModal && (
           <AddTaskModal
@@ -344,15 +344,17 @@ export default function CalendarPage() {
                   onClick={() => setTab(t)}
                   className={clsx(
                     "flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all duration-150 cursor-pointer select-none",
-                    tab === t
-                      ? "bg-[#151824] text-[#F4F4F8] border border-white/[0.1] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
-                      : "text-[#94A3B8]/50 hover:text-[#94A3B8]"
+                    tab === t && t === "notes"
+                      ? "bg-[#151824] text-[#F4F4F8] border border-rose-500/40 shadow-[0_0_12px_rgba(244,63,94,0.18),inset_0_1px_0_0_rgba(255,255,255,0.08)]"
+                      : tab === t
+                        ? "bg-[#151824] text-[#F4F4F8] border border-white/[0.1] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
+                        : "text-[#94A3B8]/50 hover:text-[#94A3B8] border border-transparent"
                   )}
                 >
                   {t === "tasks" ? (
                     <CheckSquare className={clsx("w-3.5 h-3.5 stroke-[2]", tab === t && "text-[#7C3AED]")} />
                   ) : (
-                    <StickyNote className={clsx("w-3.5 h-3.5 stroke-[2]", tab === t && "text-[#7C3AED]")} />
+                    <StickyNote className={clsx("w-3.5 h-3.5 stroke-[2]", tab === t ? "text-rose-400" : "")} />
                   )}
                   {t === "tasks" ? "Tasks" : "Notes"}
                 </button>
@@ -610,14 +612,19 @@ function DiaryDayCard({
   };
 
   return (
-    <div className="bg-[#12141D] rounded-2xl border border-white/[0.07] overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.5),inset_0_1px_0_0_rgba(255,255,255,0.06)] hover:border-white/[0.12] transition-colors">
+    <div className={clsx(
+      "rounded-2xl border overflow-hidden transition-colors",
+      isToday
+        ? "bg-[#12131C] border-rose-500/30 shadow-[0_0_45px_-10px_rgba(225,29,72,0.35),0_12px_36px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.2)]"
+        : "bg-[#12131C] border-white/[0.12] shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_12px_36px_rgba(0,0,0,0.8)] hover:border-white/[0.18]"
+    )}>
       {/* Date Header Strip */}
       <div className="px-5 py-3.5 bg-[#151824]/60 border-b border-white/[0.06] flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className={clsx(
             "w-9 h-9 rounded-xl flex items-center justify-center font-bold text-base",
             isToday
-              ? "bg-[#7C3AED] text-white shadow-[0_0_16px_rgba(124,58,237,0.4)]"
+              ? "bg-gradient-to-br from-rose-500 to-violet-600 text-white shadow-[0_0_15px_rgba(225,29,72,0.4)]"
               : "bg-[#0C0D14] text-[#94A3B8] border border-white/[0.06]"
           )}>
             {d.format("DD")}
@@ -689,14 +696,14 @@ function DiaryDayCard({
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-start justify-between gap-3 p-3 rounded-xl bg-[#0C0D14]/60 border border-white/[0.05] hover:bg-[#151824]/60 hover:border-white/[0.09] transition">
-                    <div className="flex items-start gap-2.5 flex-1 min-w-0">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#7C3AED] mt-2 flex-shrink-0 shadow-[0_0_6px_rgba(124,58,237,0.5)]" />
-                      <p className="text-sm font-normal text-[#F4F4F8]/80 leading-relaxed whitespace-pre-wrap flex-1">
+                  <div className="flex items-center justify-between gap-3 py-2.5 px-3.5 rounded-xl hover:bg-white/[0.04] transition group/row">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <div className="w-2 h-2 rounded-full bg-rose-500 flex-shrink-0 shadow-[0_0_8px_rgba(244,63,94,0.6)]" />
+                      <p className="text-[14px] font-medium text-neutral-100 leading-snug whitespace-pre-wrap flex-1">
                         {note.title}
                       </p>
                     </div>
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center gap-1 opacity-0 group-hover/row:opacity-100 transition-opacity flex-shrink-0">
                       <button
                         onClick={() => handleEdit(note)}
                         title="Edit note"
@@ -720,17 +727,22 @@ function DiaryDayCard({
         )}
 
         {/* Inline Note Entry Box */}
-        <div className="pt-1">
+        <div className="pt-1 relative">
           <textarea
             ref={textareaRef}
             value={text}
             onChange={handleInput}
             onKeyDown={handleKeyDown}
-            placeholder={`Add a quick note for ${d.format("MMM D")}... (Ctrl+Enter to save)`}
+            placeholder={`Add a quick note for ${d.format("MMM D")}...`}
             rows={1}
-            className="w-full px-3.5 py-2.5 rounded-xl bg-[#0C0D14]/80 border border-white/[0.06] text-[#F4F4F8] placeholder-[#94A3B8]/30 text-sm leading-relaxed outline-none focus:ring-2 focus:ring-[#7C3AED]/20 focus:border-[#7C3AED]/30 transition resize-none"
+            className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/[0.08] text-white placeholder:text-neutral-500 text-sm leading-relaxed outline-none focus:border-rose-500/50 focus:ring-0 transition resize-none pr-24"
             style={{ minHeight: "44px" }}
           />
+          {!text.trim() && (
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none flex items-center gap-1">
+              <kbd className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[#1C1F2E] border border-white/[0.12] text-[10px] font-semibold text-[#94A3B8]/50 leading-none">Ctrl+Enter ↵</kbd>
+            </span>
+          )}
 
           {text.trim() && (
             <motion.div
