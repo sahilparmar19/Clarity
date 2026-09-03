@@ -76,7 +76,7 @@ function LockScreen({
           </div>
 
           {/* Divider accent line */}
-          <div className="h-px w-full bg-gradient-to-r from-transparent via-[#7C3AED]/25 to-transparent" />
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-[#C87467]/25 to-transparent" />
 
           <div className="p-7">
             <form onSubmit={isSettingPin ? handleSetPin : handleUnlock} className="space-y-4">
@@ -86,7 +86,7 @@ function LockScreen({
                     initial={{ opacity: 0, y: -6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    className="flex items-center gap-2 p-3 text-[#E11D48] bg-[#E11D48]/10 rounded-xl text-xs font-semibold border border-[#E11D48]/20"
+                    className="flex items-center gap-2 p-3 text-[#C87467] bg-[#C87467]/10 rounded-xl text-xs font-semibold border border-[#C87467]/20"
                   >
                     <AlertCircle className="w-4 h-4 flex-shrink-0" />
                     <span>{error}</span>
@@ -95,7 +95,7 @@ function LockScreen({
               </AnimatePresence>
 
               <div>
-                <label className="block text-xs font-semibold text-[#94A3B8]/60 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-[#524B45] uppercase tracking-wider mb-2">
                   {isSettingPin ? "Create PIN" : "Enter PIN"}
                 </label>
                 <div className="relative">
@@ -129,7 +129,7 @@ function LockScreen({
                 <button
                   type="button"
                   onClick={() => { setIsSettingPin(!isSettingPin); setError(""); setPin(""); }}
-                  className="text-xs font-semibold text-[#94A3B8]/50 hover:text-[#7C3AED] transition cursor-pointer"
+                  className="text-xs font-semibold text-[#827A72] hover:text-[#C87467] transition cursor-pointer"
                 >
                   {isSettingPin ? "Already have a PIN? Unlock" : "First time? Set your PIN"}
                 </button>
@@ -219,14 +219,14 @@ export default function DiaryPage() {
             <button
               title="Add date"
               onClick={() => setAddingDate((v) => !v)}
-              className="p-1.5 rounded-lg hover:bg-white/[0.06] text-[#94A3B8]/60 hover:text-[#F4F4F8] transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg hover:bg-black/[0.04] text-[#827A72] hover:text-[#24211E] transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4 stroke-[2.2]" />
             </button>
             <button
               title="Lock diary"
               onClick={() => { setIsLocked(true); setPin(""); setEntries({}); }}
-              className="p-1.5 rounded-lg hover:bg-[#E11D48]/10 text-[#94A3B8]/40 hover:text-[#E11D48] transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg hover:bg-[#C87467]/10 text-[#827A72] hover:text-[#C87467] transition-colors cursor-pointer"
             >
               <Lock className="w-4 h-4 stroke-[1.8]" />
             </button>
@@ -340,17 +340,17 @@ export default function DiaryPage() {
                 <AnimatePresence mode="wait">
                   {savingIds[selectedDate] ? (
                     <motion.span key="saving" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                      className="flex items-center gap-1.5 text-xs text-[#94A3B8]/50 font-medium">
-                      <Loader2 className="w-3.5 h-3.5 animate-spin text-[#7C3AED]" /> Saving…
+                      className="flex items-center gap-1.5 text-xs text-[#827A72] font-medium">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-[#C87467]" /> Saving…
                     </motion.span>
                   ) : savedIds[selectedDate] ? (
                     <motion.span key="saved" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
-                      className="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold bg-emerald-950/30 px-2.5 py-1 rounded-lg border border-emerald-900/50">
+                      className="flex items-center gap-1.5 text-xs text-[#6B8065] font-semibold bg-[#6B8065]/10 px-2.5 py-1 rounded-lg border border-[#6B8065]/20">
                       <Check className="w-3.5 h-3.5 stroke-[2.5]" /> Saved
                     </motion.span>
                   ) : (
                     <motion.span key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                      className="flex items-center gap-1.5 text-xs text-[#94A3B8]/30">
+                      className="flex items-center gap-1.5 text-xs text-[#A39B92]">
                       <Pencil className="w-3.5 h-3.5 stroke-[1.8]" /> Auto-saves on blur
                     </motion.span>
                   )}

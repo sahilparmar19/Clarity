@@ -410,7 +410,7 @@ export default function ExpensesPage() {
           </select>
           <button
             onClick={() => setShowModal(true)}
-            className="iv-btn-primary"
+            className="morning-btn-accent"
           >
             <Plus className="w-4 h-4 stroke-[2.2]" /> Log Expense
           </button>

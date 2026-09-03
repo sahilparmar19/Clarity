@@ -114,7 +114,7 @@ function NewProjectModal({ onClose, onCreated }: { onClose: () => void; onCreate
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#94A3B8]/70 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-bold text-[#524B45] uppercase tracking-wider mb-2">
               Color Tag
             </label>
             <div className="flex gap-2">
@@ -151,7 +151,7 @@ function NewProjectModal({ onClose, onCreated }: { onClose: () => void; onCreate
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#7C3AED] text-white hover:bg-[#6D28D9] text-sm font-semibold shadow-[0_0_20px_rgba(124,58,237,0.3)] disabled:opacity-50 transition cursor-pointer"
+              className="flex-1 morning-btn-accent"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4 stroke-[2.2]" />}
               Create Project
@@ -337,8 +337,8 @@ export default function ProjectsPage() {
       </div>
 
       {loading ? (
-        <div className="flex-1 flex items-center justify-center text-[#94A3B8]/50 gap-2.5">
-          <Loader2 className="w-5 h-5 animate-spin text-[#7C3AED]" />
+        <div className="flex-1 flex items-center justify-center text-[#827A72] gap-2.5">
+          <Loader2 className="w-5 h-5 animate-spin text-[#C87467]" />
           <span className="text-sm font-medium">Loading projects...</span>
         </div>
       ) : projects.length === 0 ? (
@@ -365,7 +365,7 @@ export default function ProjectsPage() {
         <div className="flex flex-1 overflow-hidden">
           {/* ── Project Sidebar ─────────────────────────────────── */}
           <aside className="w-64 flex-shrink-0 border-r border-[#DCD6CC] flex flex-col bg-[#ECE8E1]/80">
-            <div className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]/50 border-b border-white/[0.06]">
+            <div className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-[#827A72] border-b border-black/[0.06]">
               Your Projects ({projects.length})
             </div>
             <nav className="flex-1 overflow-y-auto py-2.5 px-2.5 space-y-1">
@@ -524,8 +524,8 @@ export default function ProjectsPage() {
                             </AnimatePresence>
 
                             {colTasks.length === 0 && (
-                              <div className="flex flex-col items-center justify-center py-12 text-[#94A3B8]/30">
-                                <LayoutGrid className="w-5 h-5 mb-1.5 opacity-40" />
+                              <div className="flex flex-col items-center justify-center py-12 text-[#A39B92]">
+                                <LayoutGrid className="w-5 h-5 mb-1.5 opacity-60" />
                                 <p className="text-xs font-medium">No tasks here</p>
                               </div>
                             )}

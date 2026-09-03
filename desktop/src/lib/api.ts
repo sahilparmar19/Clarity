@@ -7,6 +7,10 @@ import type {
   Task,
   DiaryEntry,
   CalendarEvent,
+  Expense,
+  Project,
+  ProjectTask,
+  ProjectTaskStatus,
 } from "./types";
 
 class ApiClient {
@@ -122,11 +126,11 @@ class ApiClient {
 
   // ─── Expenses ────────────────────────────────────────────────────────────
 
-  async getExpenses(): Promise<any[]> {
+  async getExpenses(): Promise<Expense[]> {
     return invoke("get_expenses", { userId: this.getUserId() });
   }
 
-  async createExpense(expense: any): Promise<any> {
+  async createExpense(expense: Omit<Expense, "id" | "createdAt">): Promise<Expense> {
     return invoke("create_expense", {
       userId: this.getUserId(),
       amount: expense.amount,
@@ -143,11 +147,11 @@ class ApiClient {
 
   // ─── Projects ────────────────────────────────────────────────────────────
 
-  async getProjects(): Promise<any[]> {
+  async getProjects(): Promise<Project[]> {
     return invoke("get_projects", { userId: this.getUserId() });
   }
 
-  async createProject(project: any): Promise<any> {
+  async createProject(project: Pick<Project, "title"> & { description?: string }): Promise<Project> {
     return invoke("create_project", {
       userId: this.getUserId(),
       title: project.title,
@@ -159,20 +163,22 @@ class ApiClient {
     return invoke("delete_project", { id });
   }
 
-  async getProjectTasks(projectId: number): Promise<any[]> {
+  async getProjectTasks(projectId: number): Promise<ProjectTask[]> {
     return invoke("get_project_tasks", { projectId });
   }
 
-  async createProjectTask(task: any): Promise<any> {
+  async createProjectTask(
+    task: Pick<ProjectTask, "title" | "projectId"> & { description?: string; status?: ProjectTaskStatus }
+  ): Promise<ProjectTask> {
     return invoke("create_project_task", {
       projectId: task.projectId,
       title: task.title,
       description: task.description || null,
-      status: task.status,
+      status: task.status ?? "TODO",
     });
   }
 
-  async updateProjectTaskStatus(id: number, status: string): Promise<void> {
+  async updateProjectTaskStatus(id: number, status: ProjectTaskStatus): Promise<void> {
     return invoke("update_project_task_status", { id, status });
   }
 
