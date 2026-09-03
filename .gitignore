@@ -1,15 +1,42 @@
-# OS
+# OS & System
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # Internal Claude metadata
 %USERPROFILE%/
 
-# IDE
+# Dependencies
+node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build Outputs
+dist/
+**/dist/
+build/
+**/build/
+target/
+**/target/
+*.exe
+*.dll
+
+# Databases & Runtime
+*.db
+*.db-journal
+*.mv.db
+clarity_data.mv.db
+
+# IDE & Editor
 .idea/
 .vscode/
 *.iml
 *.iws
+*.swp
+*.swo
 
 # Logs
 *.log
+logs/
