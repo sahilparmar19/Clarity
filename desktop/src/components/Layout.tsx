@@ -50,7 +50,7 @@ export default function Layout() {
                 {greeting()}
               </p>
               <p className="text-[13px] font-bold text-[#24211E] truncate font-sans">
-                {username || "Sahil"}
+                {username || "Guest"}
               </p>
             </div>
           </div>

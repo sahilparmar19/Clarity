@@ -18,14 +18,14 @@ const COLUMNS: { id: TaskStatus; label: string; dotColor: string; dotGlow: strin
 ];
 
 const PROJECT_COLORS = [
-  { bg: "bg-indigo-500",  hex: "#6366F1", ring: "ring-indigo-400"  },
-  { bg: "bg-emerald-500", hex: "#10B981", ring: "ring-emerald-400" },
-  { bg: "bg-orange-500",  hex: "#F97316", ring: "ring-orange-400"  },
-  { bg: "bg-rose-500",    hex: "#F43F5E", ring: "ring-rose-400"    },
-  { bg: "bg-violet-500",  hex: "#8B5CF6", ring: "ring-violet-400"  },
-  { bg: "bg-cyan-500",    hex: "#06B6D4", ring: "ring-cyan-400"    },
-  { bg: "bg-amber-500",   hex: "#F59E0B", ring: "ring-amber-400"   },
-  { bg: "bg-teal-500",    hex: "#14B8A6", ring: "ring-teal-400"    },
+  { bg: "bg-[#C87467]", hex: "#C87467", ring: "ring-[#C87467]" },
+  { bg: "bg-[#6B8065]", hex: "#6B8065", ring: "ring-[#6B8065]" },
+  { bg: "bg-[#D9A441]", hex: "#D9A441", ring: "ring-[#D9A441]" },
+  { bg: "bg-[#8E7BAE]", hex: "#8E7BAE", ring: "ring-[#8E7BAE]" },
+  { bg: "bg-[#6E9FBF]", hex: "#6E9FBF", ring: "ring-[#6E9FBF]" },
+  { bg: "bg-[#B0715A]", hex: "#B0715A", ring: "ring-[#B0715A]" },
+  { bg: "bg-[#7A889B]", hex: "#7A889B", ring: "ring-[#7A889B]" },
+  { bg: "bg-[#C98A8A]", hex: "#C98A8A", ring: "ring-[#C98A8A]" },
 ];
 
 // ─── New Project Modal ────────────────────────────────────────────────────────
@@ -60,7 +60,7 @@ function NewProjectModal({ onClose, onCreated }: { onClose: () => void; onCreate
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-xs p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <motion.div
@@ -494,7 +494,7 @@ export default function ProjectsPage() {
                                       title={task.status === "DONE" ? "Restart task" : "Move to next column"}
                                     >
                                       {task.status === "DONE" ? (
-                                        <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                                        <CheckCircle2 className="w-4 h-4 text-[#6B8065]" />
                                       ) : (
                                         <ArrowRight className="w-4 h-4 text-[#827A72]" />
                                       )}

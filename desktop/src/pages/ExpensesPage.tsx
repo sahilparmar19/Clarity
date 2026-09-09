@@ -15,62 +15,62 @@ export const CATEGORIES = [
   {
     label: "Snacks",
     icon: Popcorn,
-    color: "bg-[#FDF3E7] text-[#D97706] border-[#FDE68A]",
-    badgeColor: "bg-[#FDF3E7] text-[#D97706] border-[#FDE68A]",
+    color: "bg-[#FBF3E4] text-[#A86F1F] border-[#EBD9B4]",
+    badgeColor: "bg-[#FBF3E4] text-[#A86F1F] border-[#EBD9B4]",
   },
   {
     label: "Rent",
     icon: Key,
-    color: "bg-[#F5EFF8] text-[#7C3AED] border-[#DDD6FE]",
-    badgeColor: "bg-[#F5EFF8] text-[#7C3AED] border-[#DDD6FE]",
+    color: "bg-[#F3EDF7] text-[#7765A0] border-[#DCD2E8]",
+    badgeColor: "bg-[#F3EDF7] text-[#7765A0] border-[#DCD2E8]",
   },
   {
     label: "Buying / Shopping",
     icon: ShoppingBag,
-    color: "bg-[#FDF2F4] text-[#BE185D] border-[#FBCFE8]",
-    badgeColor: "bg-[#FDF2F4] text-[#BE185D] border-[#FBCFE8]",
+    color: "bg-[#F9ECEC] text-[#AC5F66] border-[#EDD2D2]",
+    badgeColor: "bg-[#F9ECEC] text-[#AC5F66] border-[#EDD2D2]",
   },
   {
     label: "Food & Meals",
     icon: Utensils,
-    color: "bg-[#FFF7ED] text-[#C2410C] border-[#FED7AA]",
-    badgeColor: "bg-[#FFF7ED] text-[#C2410C] border-[#FED7AA]",
+    color: "bg-[#FAF0E4] text-[#AC6530] border-[#EBD3B4]",
+    badgeColor: "bg-[#FAF0E4] text-[#AC6530] border-[#EBD3B4]",
   },
   {
     label: "Chai & Coffee",
     icon: Coffee,
-    color: "bg-[#FEFCE8] text-[#A16207] border-[#FEF08A]",
-    badgeColor: "bg-[#FEFCE8] text-[#A16207] border-[#FEF08A]",
+    color: "bg-[#F6F1E2] text-[#86703C] border-[#E3D5B5]",
+    badgeColor: "bg-[#F6F1E2] text-[#86703C] border-[#E3D5B5]",
   },
   {
     label: "Groceries",
     icon: ShoppingCart,
-    color: "bg-[#F0FDF4] text-[#15803D] border-[#BBF7D0]",
-    badgeColor: "bg-[#F0FDF4] text-[#15803D] border-[#BBF7D0]",
+    color: "bg-[#EDF3EA] text-[#5F7A58] border-[#CBDCC6]",
+    badgeColor: "bg-[#EDF3EA] text-[#5F7A58] border-[#CBDCC6]",
   },
   {
     label: "Transport & Fuel",
     icon: Car,
-    color: "bg-[#EFF6FF] text-[#1D4ED8] border-[#BFDBFE]",
-    badgeColor: "bg-[#EFF6FF] text-[#1D4ED8] border-[#BFDBFE]",
+    color: "bg-[#EAF1F5] text-[#577D95] border-[#C9DCE6]",
+    badgeColor: "bg-[#EAF1F5] text-[#577D95] border-[#C9DCE6]",
   },
   {
     label: "Bills & Utilities",
     icon: Zap,
-    color: "bg-[#ECFEFF] text-[#0E7490] border-[#A5F3FC]",
-    badgeColor: "bg-[#ECFEFF] text-[#0E7490] border-[#A5F3FC]",
+    color: "bg-[#EAF3F3] text-[#4E7E7E] border-[#C6DEDD]",
+    badgeColor: "bg-[#EAF3F3] text-[#4E7E7E] border-[#C6DEDD]",
   },
   {
     label: "Entertainment",
     icon: Film,
-    color: "bg-[#FAF5FF] text-[#6B21A8] border-[#E9D5FF]",
-    badgeColor: "bg-[#FAF5FF] text-[#6B21A8] border-[#E9D5FF]",
+    color: "bg-[#F1ECF6] text-[#796592] border-[#D8CDE4]",
+    badgeColor: "bg-[#F1ECF6] text-[#796592] border-[#D8CDE4]",
   },
   {
     label: "Health & Meds",
     icon: Pill,
-    color: "bg-[#FFF1F2] text-[#BE1239] border-[#FECDD3]",
-    badgeColor: "bg-[#FFF1F2] text-[#BE1239] border-[#FECDD3]",
+    color: "bg-[#F9ECEF] text-[#A2505D] border-[#EACBD2]",
+    badgeColor: "bg-[#F9ECEF] text-[#A2505D] border-[#EACBD2]",
   },
   {
     label: "Other",
@@ -454,11 +454,11 @@ export default function ExpensesPage() {
                 <span className="text-xs font-bold text-[#827A72] uppercase tracking-wider">
                   Today's Spending
                 </span>
-                <div className="w-8 h-8 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-700 shadow-xs">
+                <div className="w-8 h-8 rounded-xl bg-[#A86F1F]/15 flex items-center justify-center text-[#A86F1F] shadow-xs">
                   <CalendarDays className="w-4 h-4 stroke-[2.2]" />
                 </div>
               </div>
-              <div className="text-2xl font-black tracking-tight text-[#D97706] font-mono">
+              <div className="text-2xl font-black tracking-tight text-[#A86F1F] font-mono">
                 ₹{todaySpending.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
               <p className="text-[11px] text-[#827A72] font-medium mt-1">

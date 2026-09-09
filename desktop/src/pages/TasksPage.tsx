@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import {
   Plus, Trash2, X, CalendarDays, AlignLeft,
-  Loader2, CheckCircle2, Circle, CheckSquare, Sparkles, Clock
+  Loader2, CheckCircle2, Circle, CheckSquare, Clock
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { api } from "@/lib/api";

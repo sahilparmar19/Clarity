@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import {
   ChevronLeft, ChevronRight, Plus, X,
   CalendarDays, Clock, Loader2, CheckSquare, StickyNote, AlignLeft,
-  Trash2, Pencil, Sparkles, Check
+  Trash2, Pencil
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { api } from "@/lib/api";
@@ -396,8 +396,8 @@ export default function CalendarPage() {
       {/* ── Content Body ───────────────────────────────────────── */}
       <div className="flex-1 overflow-auto relative">
         {loading ? (
-          <div className="flex items-center justify-center h-full text-[#7A8294] gap-2.5">
-            <Loader2 className="w-5 h-5 animate-spin text-[#8B5CF6]" />
+          <div className="flex items-center justify-center h-full text-[#827A72] gap-2.5">
+            <Loader2 className="w-5 h-5 animate-spin text-[#C87467]" />
             <span className="text-sm font-medium">Loading agenda...</span>
           </div>
         ) : tab === "notes" ? (
@@ -495,7 +495,7 @@ function NotesFeed({
       ))}
 
       {/* Footer controls */}
-      <div className="flex items-center justify-between pt-6 pb-12 border-t border-white/[0.06]">
+      <div className="flex items-center justify-between pt-6 pb-12 border-t border-black/[0.06]">
         {!showAll && allDateStrings.size > 7 ? (
           <button
             onClick={() => setShowAll(true)}
@@ -552,6 +552,7 @@ function DiaryDayCard({
 
   const [editId, setEditId] = useState<number | null>(null);
   const [editText, setEditText] = useState("");
+  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
 
   const handleEdit = (note: CalendarEvent) => {
     setEditId(note.id);
@@ -566,10 +567,15 @@ function DiaryDayCard({
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm("Delete this note?")) {
-      await api.deleteCalendarEvent(id);
-      onReload();
+    // Two-step inline confirm — avoids the native browser dialog
+    if (confirmDeleteId !== id) {
+      setConfirmDeleteId(id);
+      setTimeout(() => setConfirmDeleteId((cur) => (cur === id ? null : cur)), 3500);
+      return;
     }
+    setConfirmDeleteId(null);
+    await api.deleteCalendarEvent(id);
+    onReload();
   };
 
   const handleSave = async () => {
@@ -680,13 +686,13 @@ function DiaryDayCard({
                       <div className="flex items-center gap-1.5">
                         <button
                           onClick={() => setEditId(null)}
-                          className="px-2.5 py-1 text-xs font-semibold text-[#6B7280] hover:text-[#9CA3AF] transition"
+                          className="px-2.5 py-1 text-xs font-semibold text-[#827A72] hover:text-[#24211E] transition cursor-pointer"
                         >
                           Cancel
                         </button>
                         <button
                           onClick={handleSaveEdit}
-                          className="px-3 py-1 bg-gradient-to-r from-[#8B5CF6] to-[#6D28D9] hover:from-[#7C3AED] hover:to-[#5B21B6] text-white text-xs font-semibold rounded-lg shadow-[0_0_12px_rgba(139,92,246,0.3)] transition"
+                          className="px-3 py-1 bg-gradient-to-r from-[#D98A7E] to-[#C87467] hover:from-[#E09589] hover:to-[#B86356] text-white text-xs font-semibold rounded-lg shadow-[0_0_12px_rgba(200,116,103,0.3)] transition cursor-pointer"
                         >
                           Save Changes
                         </button>
@@ -694,29 +700,51 @@ function DiaryDayCard({
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-center justify-between gap-3 py-2.5 px-3.5 rounded-xl hover:bg-white/[0.04] transition group/row">
+                  <div className="flex items-center justify-between gap-3 py-2.5 px-3.5 rounded-xl hover:bg-black/[0.03] transition group/row">
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       <div className="w-2 h-2 rounded-full bg-[#C87467] flex-shrink-0 shadow-xs" />
                       <p className="text-[14px] font-medium text-[#24211E] leading-snug whitespace-pre-wrap flex-1">
                         {note.title}
                       </p>
                     </div>
-                    <div className="flex items-center gap-1 opacity-0 group-hover/row:opacity-100 transition-opacity flex-shrink-0">
-                      <button
-                        onClick={() => handleEdit(note)}
-                        title="Edit note"
-                        className="p-1 rounded-lg text-[#827A72] hover:text-[#24211E] hover:bg-black/[0.05] transition cursor-pointer"
+                    {confirmDeleteId === note.id ? (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="flex items-center gap-1.5 flex-shrink-0 pl-2"
                       >
-                        <Pencil className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(note.id)}
-                        title="Delete note"
-                        className="p-1 rounded-lg text-[#827A72] hover:text-[#C87467] hover:bg-[#C87467]/10 transition cursor-pointer"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
+                        <span className="text-[11px] font-bold text-[#C87467]">Delete?</span>
+                        <button
+                          onClick={() => handleDelete(note.id)}
+                          className="px-2 py-0.5 text-[11px] font-bold text-white bg-[#C87467] hover:bg-[#B86356] rounded-md transition cursor-pointer"
+                        >
+                          Yes
+                        </button>
+                        <button
+                          onClick={() => setConfirmDeleteId(null)}
+                          className="px-2 py-0.5 text-[11px] font-semibold text-[#6E6862] hover:text-[#24211E] hover:bg-black/[0.05] rounded-md transition cursor-pointer"
+                        >
+                          No
+                        </button>
+                      </motion.div>
+                    ) : (
+                      <div className="flex items-center gap-1 opacity-0 group-hover/row:opacity-100 transition-opacity flex-shrink-0">
+                        <button
+                          onClick={() => handleEdit(note)}
+                          title="Edit note"
+                          className="p-1 rounded-lg text-[#827A72] hover:text-[#24211E] hover:bg-black/[0.05] transition cursor-pointer"
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(note.id)}
+                          title="Delete note"
+                          className="p-1 rounded-lg text-[#827A72] hover:text-[#C87467] hover:bg-[#C87467]/10 transition cursor-pointer"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -990,10 +1018,24 @@ function MonthView({
 }
 
 // ─── Day View (Timeline Agenda) ───────────────────────────────────────────────
-function DayView({ events, tab }: { events: CalendarEvent[]; tab: TabMode }) {
+function DayView({ events }: { events: CalendarEvent[]; tab: TabMode }) {
   const allDay = events.filter((e) => !e.startAt);
   const timed = events.filter((e) => !!e.startAt);
   const hours = Array.from({ length: 24 }, (_, i) => i);
+
+  if (events.length === 0) {
+    return (
+      <div className="morning-card p-10 text-center">
+        <div className="w-12 h-12 bg-[#F2EFE9] rounded-2xl flex items-center justify-center mx-auto mb-3 text-[#C87467] border border-black/[0.06]">
+          <CalendarDays className="w-6 h-6 stroke-[1.8]" />
+        </div>
+        <h3 className="text-base font-bold text-[#24211E] font-serif">A clear day</h3>
+        <p className="text-[#827A72] text-xs mt-1">
+          Nothing scheduled — enjoy the open hours, or add a task above.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">

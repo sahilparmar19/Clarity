@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import dayjs from "dayjs";
 import {
   Lock, Unlock, Key, BookOpen, AlertCircle, Loader2,
-  Plus, ChevronRight, Pencil, CalendarDays, Check, Sparkles
+  Plus, ChevronRight, Pencil, CalendarDays, Check
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { api } from "@/lib/api";
